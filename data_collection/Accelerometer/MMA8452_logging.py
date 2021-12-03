@@ -11,7 +11,7 @@ import time
 logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data"] # circular log
 lfnIndex = 0 # index for which log file we will write to next
 dataList = [] #for storing data values
-MAX_VOLUME_OF_DATA_PER_FILE = 50000
+MAX_VOLUME_OF_DATA_PER_FILE = 10000
 
 #======WRITE DATA TO CIRCULAR LOG FILES==============
 def writeDataToFile(filename):
