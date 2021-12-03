@@ -70,7 +70,7 @@ def read_data():
                     print("Strength is too weak, so got a 0")
                 print("Temperature:" + str(temperature))
                 link.reset_input_buffer() 
-                return distance
+                return distance, strength
 
 if __name__ == "__main__":
     try:
@@ -78,16 +78,19 @@ if __name__ == "__main__":
             link.open()
             link.flushInput()
             link.flushOutput()
-        #Configure sensor to use mm rather than cm
+        #Configure sensor to use mm rathqqer than cm
         writeConfig()
 
         while True:
             # Loop until max volume of data has been gathered
             while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
-               datavalue = read_data() # read next sensor value
-               if(datavalue != None):
-                   dataList.append( str(datavalue)+'\n' ) # append to list of sensor values
-                   print("data value is "+str(datavalue)+" and list length is "+str(len(dataList)))
+               try:
+                 datavalue,strengthvalue = read_data() # read next sensor value 
+                 if((datavalue != None) and (strengthvalue != None)):
+                     dataList.append( str(datavalue)+","+str(strengthvalue)+'\n' ) # append to list of sensor values
+                     print("data value is "+str(datavalue)+" and list length is "+str(len(dataList)))
+               except TypeError:
+                 pass # if data returned from read_data() is None this happens
 
             # Write data to current log file
             complete = writeDataToFile( logfileNames[lfnIndex]  )
