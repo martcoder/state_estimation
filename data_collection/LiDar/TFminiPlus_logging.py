@@ -8,8 +8,11 @@ import serial
 
 
 #==========SETUP LOGGING===============
-
+logfileRoot = "/home/pi/state_estimation/data_collection/LiDar/"
 logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data"] # circular log
+logfileConcatNames = [] # full names of logfiles
+for i in range(len(logfileNames)): #create list of full logfile names
+  logfileConcatNames.append( logfileRoot+logfileNames[i] )
 lfnIndex = 0 # index for which log file we will write to next
 dataList = [] #for storing data values
 MAX_VOLUME_OF_DATA_PER_FILE = 10000
@@ -93,12 +96,12 @@ if __name__ == "__main__":
                  pass # if data returned from read_data() is None this happens
 
             # Write data to current log file
-            complete = writeDataToFile( logfileNames[lfnIndex]  )
+            complete = writeDataToFile( logfileConcatNames[lfnIndex]  )
             if complete:
                 dataList[:] = [] #empty current values
 
             # Set next log file to use in the circular logging
-            if lfnIndex < (len(logfileNames) - 1):
+            if lfnIndex < (len(logfileConcatNames) - 1):
                 lfnIndex = lfnIndex + 1 # increment to next log file for writing to
             else:
                 lfnIndex = 0  # if we reached the end of log files, circle round to start again
