@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # utf-8 encoding 
 # kindly donated by https://github.com/ibrahimqazi/TFmini-Plus-LiDAR-interfacing-with-Raspberr-Pi/blob/master/python3_2_tfmini_plus.py
 # and then added to by myself
