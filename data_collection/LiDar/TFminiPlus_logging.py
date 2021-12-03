@@ -4,7 +4,7 @@
 
 import time
 import serial
-
+from datetime import datetime
 
 #==========SETUP LOGGING===============
 logfileRoot = "/home/pi/state_estimation/data_collection/LiDar/"
@@ -38,7 +38,7 @@ def writeConfig():
 
 #======WRITE DATA TO CIRCULAR LOG FILES==============
 def writeDataToFile(filename):
-    f = open( filename,"a" )
+    f = open( filename,"w" )
     f.writelines( dataList )
     f.close #automatically flushes too
     return True
@@ -94,8 +94,9 @@ if __name__ == "__main__":
                except TypeError:
                  pass # if data returned from read_data() is None this happens
 
+            currently = datetime.now().time()
             # Write data to current log file
-            complete = writeDataToFile( logfileConcatNames[lfnIndex]  )
+            complete = writeDataToFile(logfileConcatNames[lfnIndex]+"_"+str(currently)  )
             if complete:
                 dataList[:] = [] #empty current values
 

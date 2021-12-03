@@ -5,6 +5,7 @@
 
 import smbus
 import time
+from datetime import datetime
 
 #==========SETUP LOGGING===============
 logfileRoot = "/home/pi/state_estimation/data_collection/Accelerometer/"
@@ -18,7 +19,7 @@ MAX_VOLUME_OF_DATA_PER_FILE = 10000
 
 #======WRITE DATA TO CIRCULAR LOG FILES==============
 def writeDataToFile(filename):
-    f = open( filename,"a" )
+    f = open( filename,"w" )
     f.writelines( dataList )
     f.close #automatically flushes too
     return True
@@ -117,8 +118,9 @@ if __name__ == "__main__":
                    dataList.append( str(x)+","+str(y)+","+str(z)+'\n' ) # append to list of sensor values
                    print("data read is x: "+str(x)+", y: "+str(y)+", z: "+str(z)+'\n'" and list length is "+str(len(dataList)))
 
+            currently = datetime.now().time()
             # Write data to current log file
-            complete = writeDataToFile( logfileConcatNames[lfnIndex]  )
+            complete = writeDataToFile( logfileConcatNames[lfnIndex]+"_"+str(currently)  )
             if complete: # once file is written
                 dataList[:] = [] #empty current values
 
