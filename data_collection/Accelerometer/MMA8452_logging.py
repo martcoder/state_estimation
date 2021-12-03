@@ -115,12 +115,11 @@ if __name__ == "__main__":
                    prevX = x
                    prevY = y
                    prevZ = z
-                   dataList.append( str(x)+","+str(y)+","+str(z)+'\n' ) # append to list of sensor values
+                   dataList.append( str(x)+","+str(y)+","+str(z)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
                    print("data read is x: "+str(x)+", y: "+str(y)+", z: "+str(z)+'\n'" and list length is "+str(len(dataList)))
 
-            currently = datetime.now().time()
             # Write data to current log file
-            complete = writeDataToFile( logfileConcatNames[lfnIndex]+"_"+str(currently)  )
+            complete = writeDataToFile( logfileConcatNames[lfnIndex] )
             if complete: # once file is written
                 dataList[:] = [] #empty current values
 

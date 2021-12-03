@@ -14,7 +14,7 @@ for i in range(len(logfileNames)): #create list of full logfile names
   logfileConcatNames.append( logfileRoot+logfileNames[i] )
 lfnIndex = 0 # index for which log file we will write to next
 dataList = [] #for storing data values
-MAX_VOLUME_OF_DATA_PER_FILE = 10000
+MAX_VOLUME_OF_DATA_PER_FILE = 1000
 
 #=========SETUP SERIAL CONNECTION======
 link = serial.Serial(port='/dev/ttyAMA0', baudrate=115200, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=1)
@@ -89,14 +89,13 @@ if __name__ == "__main__":
                try:
                  datavalue,strengthvalue = read_data() # read next sensor value 
                  if((datavalue != None) and (strengthvalue != None)):
-                     dataList.append( str(datavalue)+","+str(strengthvalue)+'\n' ) # append to list of sensor values
+                     dataList.append( str(datavalue)+","+str(strengthvalue)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
                      print("data value is "+str(datavalue)+" and list length is "+str(len(dataList)))
                except TypeError:
                  pass # if data returned from read_data() is None this happens
 
-            currently = datetime.now().time()
             # Write data to current log file
-            complete = writeDataToFile(logfileConcatNames[lfnIndex]+"_"+str(currently)  )
+            complete = writeDataToFile(logfileConcatNames[lfnIndex] )
             if complete:
                 dataList[:] = [] #empty current values
 
