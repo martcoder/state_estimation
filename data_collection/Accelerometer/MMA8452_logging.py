@@ -11,7 +11,7 @@ import time
 logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data"] # circular log
 lfnIndex = 0 # index for which log file we will write to next
 dataList = [] #for storing data values
-MAX_VOLUME_OF_DATA_PER_FILE = 100000
+MAX_VOLUME_OF_DATA_PER_FILE = 50000
 
 #======WRITE DATA TO CIRCULAR LOG FILES==============
 def writeDataToFile(filename):
@@ -99,11 +99,18 @@ if __name__ == "__main__":
     try:
         initialise_configure_sensor()
         time.sleep(0.5)
+        prevX = 0
+        prevY = 0
+        prevZ = 0
         while True:
             # Loop until max volume of data has been gathered
             while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
                x,y,z = read_data() # read next sensor value
-               if(x != None or y != None or z != None):
+               # Check values are populated, and check they are not same as previous value (even at rest they change a little)
+               if( (x != None or y != None or z != None) and ( (x != prevX) and (y != prevY) and (z != prevZ) )  ):
+                   prevX = x
+                   prevY = y
+                   prevZ = z
                    dataList.append( str(x)+","+str(y)+","+str(z)+'\n' ) # append to list of sensor values
                    print("data read is x: "+str(x)+", y: "+str(y)+", z: "+str(z)+'\n'" and list length is "+str(len(dataList)))
 
