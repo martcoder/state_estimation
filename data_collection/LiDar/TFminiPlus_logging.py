@@ -19,13 +19,13 @@ except OSError:
     errorF = open( errorFile,"a")
     errorF.write("Error creating logging folder at "+str(datetime.now().time())+'\n')
 
-logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data","log11.data","log12.data","log13.data","log14.data","log15.data"] # circular log
+logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data","log11.data","log12.data","log13.data","log14.data","log15.data","log16.data","log17.data","log18.data","log19.data","log20.data","log21.data","log22.data"] # circular log
 logfileConcatNames = [] # full names of logfiles
 for i in range(len(logfileNames)): #create list of full logfile names
   logfileConcatNames.append( logfileRoot+logfileNames[i] )
 lfnIndex = 0 # index for which log file we will write to next
 dataList = [] #for storing data values
-MAX_VOLUME_OF_DATA_PER_FILE = 3500
+MAX_VOLUME_OF_DATA_PER_FILE = 4000
 
 #=========SETUP SERIAL CONNECTION======
 link = serial.Serial(port='/dev/ttyAMA0', baudrate=115200, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=1)

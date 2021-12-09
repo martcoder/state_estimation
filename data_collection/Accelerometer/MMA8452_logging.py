@@ -19,7 +19,7 @@ try: #make the logging folder, record error if it doesnt work.
 except OSError:
     errorF = open( errorFile,"a")
     errorF.write("Error creating logging folder at "+str(datetime.now().time())+'\n')
-logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data","log11.data","log12.data","log13.data","log14.data","log15.data"] # circular log
+logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data","log11.data","log12.data","log13.data","log14.data","log15.data","log16.data","log17.data","log18.data","log19.data","log20.data"] # circular log
 logfileConcatNames = []
 for i in range(len(logfileNames)):
   logfileConcatNames.append( logfileRoot+logfileNames[i] )
