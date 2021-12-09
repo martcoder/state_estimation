@@ -15,7 +15,7 @@ for i in range(len(logfileNames)):
   logfileConcatNames.append( logfileRoot+logfileNames[i] )
 lfnIndex = 0 # index for which log file we will write to next
 dataList = [] #for storing data values
-MAX_VOLUME_OF_DATA_PER_FILE = 10000
+MAX_VOLUME_OF_DATA_PER_FILE = 5000
 
 #======WRITE DATA TO CIRCULAR LOG FILES==============
 def writeDataToFile(filename):
