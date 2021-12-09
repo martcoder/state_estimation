@@ -6,17 +6,26 @@
 import smbus
 import time
 from datetime import datetime
-
+import os, os.path
+import errno
+#folder creation from: https://gist.github.com/keithweaver/562d3caa8650eefe7f84fa074e9ca949
 #==========SETUP LOGGING===============
+errorFile = "/home/pi/state_estimation/data_collection/Accelerometer/errors.log"
 folderName = str( datetime.now().time() )
 logfileRoot = "/home/pi/state_estimation/data_collection/Accelerometer/"+folderName+"/"
-logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data"] # circular log
+try: #make the logging folder, record error if it doesnt work. 
+  if not os.path.exists(logfileRoot):
+    os.makedirs(logfileRoot)
+except OSError:
+    errorF = open( errorFile,"a")
+    errorF.write("Error creating logging folder at "+str(datetime.now().time())+'\n')
+logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data","log11.data","log12.data","log13.data","log14.data","log15.data"] # circular log
 logfileConcatNames = []
 for i in range(len(logfileNames)):
   logfileConcatNames.append( logfileRoot+logfileNames[i] )
 lfnIndex = 0 # index for which log file we will write to next
 dataList = [] #for storing data values
-MAX_VOLUME_OF_DATA_PER_FILE = 5000
+MAX_VOLUME_OF_DATA_PER_FILE = 3500
 
 #======WRITE DATA TO CIRCULAR LOG FILES==============
 def writeDataToFile(filename):
