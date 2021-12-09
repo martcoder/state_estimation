@@ -8,7 +8,8 @@ import time
 from datetime import datetime
 
 #==========SETUP LOGGING===============
-logfileRoot = "/home/pi/state_estimation/data_collection/Accelerometer/"
+folderName = str( datetime.now().time() )
+logfileRoot = "/home/pi/state_estimation/data_collection/Accelerometer/"+folderName+"/"
 logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data"] # circular log
 logfileConcatNames = []
 for i in range(len(logfileNames)):
