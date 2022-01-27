@@ -3,7 +3,7 @@ import sys
 
 file = None
 if len(sys.argv) == 2:
-  file = open('Accel_Z_concat.data','r')
+  file = open(sys.argv[1],'r')
 else:
   print("Need a filename argument when starting")
   exit()
