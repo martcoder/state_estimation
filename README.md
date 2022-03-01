@@ -17,9 +17,10 @@ Steps required:
 - data collection prototyping
   using currently a rPi to 
   receive and log data
-  (currently here)
+  (completed)
 
 - data analysis to build models
+  (currently here)
 
 - run algorithm on data to test
 
