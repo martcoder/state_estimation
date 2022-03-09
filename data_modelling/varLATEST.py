@@ -237,9 +237,9 @@ print( "Variance of accel windowed modes x:"+str((AccelWindowedModesX)) + "\n")
 print( "Variance of accel windowed modes y:"+str((AccelWindowedModesY) ) + "\n")
 print( "Variance of accel windowed means y:"+str((AccelWindowedMeansY)  ) + "\n")
 
+normalisedVarAccelWindowedMeansX = [ j/max(AccelWindowedMeansX) for j in AccelWindowedMeansX ]
 print( "Normalised Variance of accel windowed means x:" +str([ j/max(AccelWindowedMeansX) for j in AccelWindowedMeansX ]) + "\n")
 print( "Normalised Variance of accel windowed modes x:" +str([ h/max(AccelWindowedModesX) for h in AccelWindowedModesX ]) + "\n")
 
-
-print("accel x plus y plus lidar")
-print(
+combined = [sum(z) for z in zip(normAccelVarsXplusY,normalisedVarAccelWindowedMeansX)]
+print("accel x plus y plus lidar is: "+str(combined) + "\n")
