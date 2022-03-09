@@ -41,11 +41,11 @@ for filename in filenames:
  for line in Lines:
   linevals = line.split(',')
   xval = float(linevals[0])
-  if xval >= 0:
-    xList.append(round(float(linevals[0]),4)) # x value with rounded decimal places
+  if (xval >= 0) and (xval > -1000) and (xval < 1000): #remove outliers and negatives
+    xList.append(round(float(linevals[0]),decimalPlaces)) # x value with rounded decimal places
   yval = float(linevals[1])
-  if yval >= 0:
-    yList.append(round( float(linevals[1]),4 ) ) # y value
+  if (yval >= 0) and (yval > -1000) and (yval < 1000): # remove outliers and negatives
+    yList.append(round( float(linevals[1]),decimalPlaces ) ) # y value
 
  #first let's just check the entire dataset variance.... 
  print("Before processing....\n")
@@ -53,16 +53,16 @@ for filename in filenames:
  print("Total Var for Y: "+str( statistics.variance(yList) )+"\n" )
 
  #Now go over the data and do FIR filter with size 4
- filterSize = 5
- filterCoeff = 0.2
+ filterSize = 4
+ filterCoeff = 0.25
  for index in range(filterSize,len(xList)):
-  xList[index] = (filterCoeff*xList[index]) + (filterCoeff*xList[index-1]) + (filterCoeff*xList[index-2]) + (filterCoeff*xList[index-3]) + (filterCoeff*xList[index-4])
+  xList[index] = (filterCoeff*xList[index]) + (filterCoeff*xList[index-1]) + (filterCoeff*xList[index-2]) + (filterCoeff*xList[index-3]) #+ (filterCoeff*xList[index-4])
 
  for index in range(filterSize,len(yList)):
-  yList[index] = (filterCoeff*yList[index]) + (filterCoeff*yList[index-1]) + (filterCoeff*yList[index-2]) + (filterCoeff*yList[index-3]) + (filterCoeff*yList[index-4])
+  yList[index] = (filterCoeff*yList[index]) + (filterCoeff*yList[index-1]) + (filterCoeff*yList[index-2]) + (filterCoeff*yList[index-3]) #+ (filterCoeff*yList[index-4])
 
- #Now go over the data and do short-time variance :)
- window = 3
+ #Now go over the data and do short-time variance :) also short-time mean and mode
+ window = 5
  lower = 0
  upper = window
  xVariances = []
@@ -146,6 +146,11 @@ print("Normalised Accel Y means: "+str(normAccelMeansY) + "\n")
 print("Normalised Accel Y modes: "+str(normAccelModesY) + "\n")
 print("Normalised Accel Y vars: "+str(normAccelVarsY) + "\n")
 
+normWindowedXMeans = [ k/max(AccelWindowedMeansX) for k in AccelWindowedMeansX ]
+normWindowedYMeans = [ n/max(AccelWindowedMeansY) for n in AccelWindowedMeansY ]
+print("Normalised windowed X means :"+str(AccelWindowedMeansX) )
+print("Normalised windowed Y means :"+str(AccelWindowedMeansY) )
+
 print("Normalised Accel X+Y means: "+str(normAccelMeansXplusY) + "\n")
 print("Normalised Accel X+Y vars: "+str(normAccelVarsXplusY) + "\n")
 print("Accel means plus vars: "+str(meansPlusVars) + "\n")
@@ -190,7 +195,7 @@ for filename in filenamesLidar:
  #print("Lidar FIR'd data variance is: "+str(statistics.variance(lidarList)) )
 
  #Now go over the data and do short-time variance :)
- windowLidar = 3
+ windowLidar = 10
  lower = 0
  upper = windowLidar
  lidarVariances = [] # list of variances for window size chunks through the file
@@ -238,8 +243,11 @@ print( "Variance of accel windowed modes y:"+str((AccelWindowedModesY) ) + "\n")
 print( "Variance of accel windowed means y:"+str((AccelWindowedMeansY)  ) + "\n")
 
 normalisedVarAccelWindowedMeansX = [ j/max(AccelWindowedMeansX) for j in AccelWindowedMeansX ]
+normalisedVarAccelWindowedModesX = [ m/max(AccelWindowedModesX) for m in AccelWindowedModesX ]
 print( "Normalised Variance of accel windowed means x:" +str([ j/max(AccelWindowedMeansX) for j in AccelWindowedMeansX ]) + "\n")
 print( "Normalised Variance of accel windowed modes x:" +str([ h/max(AccelWindowedModesX) for h in AccelWindowedModesX ]) + "\n")
 
 combined = [sum(z) for z in zip(normAccelVarsXplusY,normalisedVarAccelWindowedMeansX)]
-print("accel x plus y plus lidar is: "+str(combined) + "\n")
+print("accel x plus y plus var of windowed means X is: "+str(combined) + "\n")
+normVarsXplusNormVarWindowedMeansX = [sum(y) for y in zip(normAccelVarsX,normalisedVarAccelWindowedMeansX)] 
+print("Accel Varianced X plus Var of windowed Means X: "+str(normVarsXplusNormVarWindowedMeansX) )
