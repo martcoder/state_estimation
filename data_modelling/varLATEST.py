@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import sys
+import os
 import matplotlib
 import matplotlib.pyplot as plot
 import statistics
@@ -77,12 +78,15 @@ for filename in filenames:
  yMeans = []
  yModes = []
  #Also write a varholder file for pmf-ing later :)
+ try:
+  os.remove(filename+"varholder.data")
+ except FileNotFoundError:
+  pass
  writerVars = open(filename+"varholder.data","a")
- writerVars.write(statistics.variance(xList[lower:upper])+"\n")
 
  while upper < len(xList):
    xVariances.append( statistics.variance(xList[lower:upper]) )
-  
+   writerVars.write(str(statistics.variance(xList[lower:upper]))+"\n")
    xMeans.append( statistics.mean( xList[lower:upper]  )  )
    xModes.append( statistics.mode( xList[lower:upper]   )   )
     #yVariances.append( statistics.variance(yList[lower:upper]) )
