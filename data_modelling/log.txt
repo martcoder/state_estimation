@@ -968,3 +968,53 @@ Mode: 1.25
 Mean: 214.4341030682215
 Var: 44188.51386977243
 
+For data: Accel15psi.data
+Mode: 18.9875
+Mean: 401.00648291150713
+Var: 142052.26989089334
+
+For data: Accel20psi.data
+Mode: 3.2
+Mean: 414.04571747844994
+Var: 144617.79628995367
+
+For data: Accel25psi.data
+Mode: 2.3875
+Mean: 415.32778238405194
+Var: 171039.56942959633
+
+For data: Accel30psi.data
+Mode: 12.1125
+Mean: 366.3793784844807
+Var: 137919.9241557206
+
+For data: Accel35psi.data
+Mode: 32.5125
+Mean: 382.70425324824794
+Var: 205449.9744410713
+
+For data: Accel40psi.data
+Mode: 3.8
+Mean: 425.74964543271676
+Var: 158123.65712664582
+
+For data: Accel45psi.data
+Mode: 1.5625
+Mean: 393.1966183341566
+Var: 158622.6242197074
+
+For data: Accel50psi.data
+Mode: 1.7
+Mean: 452.8072395328329
+Var: 183858.23360806238
+
+For data: Accel55psi.data
+Mode: 1.1875
+Mean: 496.45400233314075
+Var: 249721.9117951773
+
+For data: Accel60psi.data
+Mode: 1.25
+Mean: 457.0513081990022
+Var: 190004.58792984375
+
