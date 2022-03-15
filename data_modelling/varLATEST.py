@@ -212,6 +212,13 @@ for filename in filenamesLidar:
  #print("Lidar FIR'd data variance is: "+str(statistics.variance(lidarList)) )
 
  #Now go over the data and do short-time variance :)
+ try:
+  os.remove(filename+"varholder.data")
+ except FileNotFoundError:
+  pass
+ writerVars = open(filename+"varholder.data","a")
+
+
  windowLidar = 10
  lower = 0
  upper = windowLidar
@@ -220,6 +227,7 @@ for filename in filenamesLidar:
  lidarModes = []
  while upper < len(lidarList):
    lidarVariances.append( statistics.variance(lidarList[lower:upper]) )
+   writerVars.write(str(statistics.variance(lidarList[lower:upper]))+"\n")
    lidarMeans.append( statistics.mean(lidarList[lower:upper])  )
    lidarModes.append( statistics.mode(lidarList[lower:upper])  )
    #yVariances.append( statistics.variance(yList[lower:upper]) )
