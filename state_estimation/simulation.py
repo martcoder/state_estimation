@@ -60,25 +60,25 @@ for filename in filenamesAccel:
  for line in Lines: 
    keyval = line.split(',')
    if filename == str("Accel60psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['60psi'][keyval[0]] = keyval[1]
+     AccelmeasurementModel['60psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel55psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['55psi'][keyval[0]] = keyval[1]
+     AccelmeasurementModel['55psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel50psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['50psi'][keyval[0]] = keyval[1]
+     AccelmeasurementModel['50psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel45psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['45psi'][keyval[0]] = keyval[1]
+     AccelmeasurementModel['45psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel40psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['40psi'][keyval[0]] = keyval[1]
+     AccelmeasurementModel['40psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel35psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['35psi'][keyval[0]] = keyval[1]
+     AccelmeasurementModel['35psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel30psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['30psi'][keyval[0]] = keyval[1]
+     AccelmeasurementModel['30psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel25psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['25psi'][keyval[0]] = keyval[1]
+     AccelmeasurementModel['25psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel20psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['20psi'][keyval[0]] = keyval[1]
+     AccelmeasurementModel['20psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel15psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['15psi'][keyval[0]] = keyval[1]
+     AccelmeasurementModel['15psi'][round(double(keyval[0]),2)] = double(keyval[1])
 
 for filename in filenamesLidar:
  lefile = open(filename,"r")
@@ -86,25 +86,25 @@ for filename in filenamesLidar:
  for line in Lines: 
    keyval = line.split(',')
    if filename == str("Accel60psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['60psi'][keyval[0]] = keyval[1]
+     LidarmeasurementModel['60psi'][round(double(keyval[0]))] = double(keyval[1])
    if filename == str("Accel55psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['55psi'][keyval[0]] = keyval[1]
+     LidarmeasurementModel['55psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel50psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['50psi'][keyval[0]] = keyval[1]
+     LidarmeasurementModel['50psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel45psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['45psi'][keyval[0]] = keyval[1]
+     LidarmeasurementModel['45psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel40psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['40psi'][keyval[0]] = keyval[1]
+     LidarmeasurementModel['40psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel35psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['35psi'][keyval[0]] = keyval[1]
+     LidarmeasurementModel['35psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel30psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['30psi'][keyval[0]] = keyval[1]
+     LidarmeasurementModel['30psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel25psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['25psi'][keyval[0]] = keyval[1]
+     LidarmeasurementModel['25psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel20psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['20psi'][keyval[0]] = keyval[1]
+     LidarmeasurementModel['20psi'][round(double(keyval[0]),2)] = double(keyval[1])
    if filename == str("Accel15psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['15psi'][keyval[0]] = keyval[1]
+     LidarmeasurementModel['15psi'][round(double(keyval[0]),2)] = double(keyval[1])
 
 #Now for the motion models
 state_probability = 0.1; # 10 possible states, 1/10
@@ -179,4 +179,66 @@ motion_model_35psi[45] = 0.02
 motion_model_35psi[50] = 0.02
 motion_model_35psi[55] = 0.005
 motion_model_35psi[60] = 0.005
+
+motion_model_30psi = dict()
+motion_model_30psi[15] = 0.01
+motion_model_30psi[20] = 0.02
+motion_model_30psi[25] = 0.1
+motion_model_30psi[30] = 0.3
+motion_model_30psi[35] = 0.5
+motion_model_30psi[40] = 0.02
+motion_model_30psi[45] = 0.02
+motion_model_30psi[50] = 0.02
+motion_model_30psi[55] = 0.005
+motion_model_30psi[60] = 0.005
+
+motion_model_25psi = dict()
+motion_model_25psi[15] = 0.02
+motion_model_25psi[20] = 0.3
+motion_model_25psi[25] = 0.5
+motion_model_25psi[30] = 0.1
+motion_model_25psi[35] = 0.02
+motion_model_25psi[40] = 0.02
+motion_model_25psi[45] = 0.02
+motion_model_25psi[50] = 0.01
+motion_model_25psi[55] = 0.005
+motion_model_25psi[60] = 0.005
+
+motion_model_20psi = dict()
+motion_model_20psi[15] = 0.3
+motion_model_20psi[20] = 0.5
+motion_model_20psi[25] = 0.1
+motion_model_20psi[30] = 0.02
+motion_model_20psi[35] = 0.02
+motion_model_20psi[40] = 0.02
+motion_model_20psi[45] = 0.02
+motion_model_20psi[50] = 0.01
+motion_model_20psi[55] = 0.005
+motion_model_20psi[60] = 0.005
+
+motion_model_15psi = dict()
+motion_model_15psi[15] = 0.3
+motion_model_15psi[20] = 0.3
+motion_model_15psi[25] = 0.3
+motion_model_15psi[30] = 0.02
+motion_model_15psi[35] = 0.02
+motion_model_15psi[40] = 0.02
+motion_model_15psi[45] = 0.02
+motion_model_15psi[50] = 0.01
+motion_model_15psi[55] = 0.005
+motion_model_15psi[60] = 0.005
+
+#do initial prediction just to get started
+tempvals = list( motion_model_60psi.values() )
+prediction1 = [x * state_probability for x in tempvals]
+
+#Now for update1 with arbitrary values
+tempY1suchthatX1 = LidarmeasurementModel['60psi'][40.0]
+tempMult = [x * tempY1suchthatX1 for x in prediction1]
+update1 = tempMult / 0.5
+print(update1)
+
+#Now do the first step .... PREDICTION
+def prediction:
+ 
 
