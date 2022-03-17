@@ -60,25 +60,25 @@ for filename in filenamesAccel:
  for line in Lines: 
    keyval = line.split(',')
    if filename == str("Accel60psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['60psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     AccelmeasurementModel['60psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel55psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['55psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     AccelmeasurementModel['55psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel50psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['50psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     AccelmeasurementModel['50psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel45psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['45psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     AccelmeasurementModel['45psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel40psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['40psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     AccelmeasurementModel['40psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel35psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['35psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     AccelmeasurementModel['35psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel30psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['30psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     AccelmeasurementModel['30psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel25psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['25psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     AccelmeasurementModel['25psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel20psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['20psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     AccelmeasurementModel['20psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel15psi.datavarholder.datavarhistogram.data"):
-     AccelmeasurementModel['15psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     AccelmeasurementModel['15psi'][round(float(keyval[0]),2)] = float(keyval[1])
 
 for filename in filenamesLidar:
  lefile = open(filename,"r")
@@ -86,25 +86,25 @@ for filename in filenamesLidar:
  for line in Lines: 
    keyval = line.split(',')
    if filename == str("Accel60psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['60psi'][round(double(keyval[0]))] = double(keyval[1])
+     LidarmeasurementModel['60psi'][round(float(keyval[0]))] = float(keyval[1])
    if filename == str("Accel55psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['55psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     LidarmeasurementModel['55psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel50psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['50psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     LidarmeasurementModel['50psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel45psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['45psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     LidarmeasurementModel['45psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel40psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['40psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     LidarmeasurementModel['40psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel35psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['35psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     LidarmeasurementModel['35psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel30psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['30psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     LidarmeasurementModel['30psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel25psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['25psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     LidarmeasurementModel['25psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel20psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['20psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     LidarmeasurementModel['20psi'][round(float(keyval[0]),2)] = float(keyval[1])
    if filename == str("Accel15psi.datavarholder.datavarhistogram.data"):
-     LidarmeasurementModel['15psi'][round(double(keyval[0]),2)] = double(keyval[1])
+     LidarmeasurementModel['15psi'][round(float(keyval[0]),2)] = float(keyval[1])
 
 #Now for the motion models
 state_probability = 0.1; # 10 possible states, 1/10
@@ -235,10 +235,53 @@ prediction1 = [x * state_probability for x in tempvals]
 #Now for update1 with arbitrary values
 tempY1suchthatX1 = LidarmeasurementModel['60psi'][40.0]
 tempMult = [x * tempY1suchthatX1 for x in prediction1]
-update1 = tempMult / 0.5
-print(update1)
+update1 = [t*2 for t in tempMult]
+print("Update1 with arbitrary values is: "+str(update1))
+
+print("prediction1 is :"+str(prediction1))
 
 #Now do the first step .... PREDICTION
-def prediction:
- 
+def prediction():
+ #60 psi
+ predictionMap = dict()
+ predictionMap[15] = prediction1[0]
+ predictionMap[20] = prediction[1]
+ predictionMap[25] = prediction[2]
+ predictionMap[30] = prediction[3]
+ predictionMap[35] = prediction[4]
+ predictionMap[40] = prediction[5]
+ predictionMap[45] = prediction[6]
+ predictionMap[50] = prediction[7] 
+ predictionMap[55] = prediction[8]
+ predictionMap[60] = prediction[9]
+
+ predictionOfAccelBeing60SuchThatPreviousAccelWas60psi = motion_model_60psi[60]  * predictionMap[60]
+ predictionOfAccelBeing60SuchThatPreviousAccelWas55psi =  motion_model_60psi[55] * predictionMap[55]
+ predictionOfAccelBeing60SuchThatPreviousAccelWas50psi = motion_model_60psi[50] * predictionMap[50]
+ predictionOfAccelBeing60SuchThatPreviousAccelWas45psi = motion_model_60psi[45] * predictionMap[45]
+ predictionOfAccelBeing60SuchThatPreviousAccelWas40psi = motion_model_60psi[40] * predictionMap[40]
+ predictionOfAccelBeing60SuchThatPreviousAccelWas35psi = motion_model_60psi[35] * predictionMap[35]
+ predictionOfAccelBeing60SuchThatPreviousAccelWas30psi = motion_model_60psi[30] * predictionMap[30]
+ predictionOfAccelBeing60SuchThatPreviousAccelWas25psi = motion_model_60psi[25] * predictionMap[25]
+ predictionOfAccelBeing60SuchThatPreviousAccelWas20psi = motion_model_60psi[20] * predictionMap[20]
+ predictionOfAccelBeing60SuchThatPreviousAccelWas15psi = motion_model_60psi[15] * predictionMap[15]
+
+ overall60PSIchances = predictionOfAccelBeing60SuchThatPreviousAccelWas60psi + 
+predictionOfAccelBeing60SuchThatPreviousAccelWas55psi + 
+predictionOfAccelBeing60SuchThatPreviousAccelWas50psi + 
+predictionOfAccelBeing60SuchThatPreviousAccelWas45psi + 
+predictionOfAccelBeing60SuchThatPreviousAccelWas40psi + 
+predictionOfAccelBeing60SuchThatPreviousAccelWas35psi + 
+predictionOfAccelBeing60SuchThatPreviousAccelWas30psi + 
+predictionOfAccelBeing60SuchThatPreviousAccelWas25psi + 
+predictionOfAccelBeing60SuchThatPreviousAccelWas20psi + 
+predictionOfAccelBeing60SuchThatPreviousAccelWas15psi
+
+
+
+
+
+
+
+
 
