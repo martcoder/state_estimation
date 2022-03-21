@@ -23,7 +23,7 @@ filenamesLidar = ["Accel15psi.datavarholder.datavarhistogram.data",
 "Accel30psi.datavarholder.datavarhistogram.data",
 "Accel35psi.datavarholder.datavarhistogram.data",
 "Accel40psi.datavarholder.datavarhistogram.data",
-"Accel45psi.datavarholder.datavarhistogram.data",
+"Accel45psi.datavarholder.datavarhistogram.data"
 "Accel50psi.datavarholder.datavarhistogram.data",
 "Accel55psi.datavarholder.datavarhistogram.data",
 "Accel60psi.datavarholder.datavarhistogram.data"]
@@ -240,21 +240,26 @@ print("Update1 with arbitrary values is: "+str(update1))
 
 print("prediction1 is :"+str(prediction1))
 
-#Now do the first step .... PREDICTION
-def prediction():
- #60 psi
- predictionMap = dict()
- predictionMap[15] = prediction1[0]
- predictionMap[20] = prediction[1]
- predictionMap[25] = prediction[2]
- predictionMap[30] = prediction[3]
- predictionMap[35] = prediction[4]
- predictionMap[40] = prediction[5]
- predictionMap[45] = prediction[6]
- predictionMap[50] = prediction[7] 
- predictionMap[55] = prediction[8]
- predictionMap[60] = prediction[9]
 
+#Current Accel, and Lidar data values
+currentAccel = 40.0;
+currentLidar = 20.0;
+
+#Now do the first step .... PREDICTION
+
+ predictionMap = dict()
+ predictionMap[15.0] = prediction1[0]
+ predictionMap[20.0] = prediction[1]
+ predictionMap[25.0] = prediction[2]
+ predictionMap[30.0] = prediction[3]
+ predictionMap[35.0] = prediction[4]
+ predictionMap[40.0] = prediction[5]
+ predictionMap[45.0] = prediction[6]
+ predictionMap[50.0] = prediction[7] 
+ predictionMap[55.0] = prediction[8]
+ predictionMap[60.0] = prediction[9]
+
+def prediction():
  predictionOfAccelBeing60SuchThatPreviousAccelWas60psi = motion_model_60psi[60]  * predictionMap[60]
  predictionOfAccelBeing60SuchThatPreviousAccelWas55psi =  motion_model_60psi[55] * predictionMap[55]
  predictionOfAccelBeing60SuchThatPreviousAccelWas50psi = motion_model_60psi[50] * predictionMap[50]
@@ -487,6 +492,99 @@ predictionOfAccelBeing15SuchThatPreviousAccelWas15psi
  predictionMapAccel[55.0] = overall55PSIchancesAccel
  predictionMapAccel[60.0] = overall60PSIchancesAccel
 
-#2nd step is update
+#2nd step is preprocessing incoming data e.g. filter, get variance, fit into bucket
+currentAccel = next line of data
+currentLidar = next line of data
+TOOOOOOOOO DOOOOOOOOOOOOOOOO 
+
+#for filename in filenamesLidar:
+datafile = open("Accel15psi.data","r")
+ Lines = lefile.readlines() 
+ counter = 0
+ datablock = []
+ for line in Lines: 
+  counter += 1
+  if counter < 10:
+    val = float(line)
+    #Now put into bucket
+    if val 
+
+
+
+#3rd step is update
 def update():
- 
+ #For each possible state do (measurement_model * prediction) / 
+ # (sumOf measurement_model * prediction)
+ # ...to create a pmf with each state having a probability
+
+ #construct numerators
+ numeratorsAccel = dict()
+ numeratorsLidar = dict()
+ numeratorsAccel[60.0] = overall60PSIchancesAccel * AccelmeasurementModel['60psi'][currentAccel]
+ numeratorsAccel[55.0] = overall55PSIchancesAccel * AccelmeasurementModel['55psi'][currentAccel]
+ numeratorsAccel[50.0] = overall50PSIchancesAccel * AccelmeasurementModel['50psi'][currentAccel]
+ numeratorsAccel[45.0] = overall45PSIchancesAccel * AccelmeasurementModel['45psi'][currentAccel]
+ numeratorsAccel[40.0] = overall40PSIchancesAccel * AccelmeasurementModel['40psi'][currentAccel]
+ numeratorsAccel[35.0] = overall35PSIchancesAccel * AccelmeasurementModel['35psi'][currentAccel]
+ numeratorsAccel[30.0] = overall30PSIchancesAccel * AccelmeasurementModel['30psi'][currentAccel]
+ numeratorsAccel[25.0] = overall25PSIchancesAccel * AccelmeasurementModel['25psi'][currentAccel]
+ numeratorsAccel[20.0] = overall20PSIchancesAccel * AccelmeasurementModel['20psi'][currentAccel]
+ numeratorsAccel[15.0] = overall15PSIchancesAccel * AccelmeasurementModel['15psi'][currentAccel]
+
+ numeratorsLidar[60.0] = overall60PSIchancesLidar * LidarmeasurementModel['60psi'][currentLidar]
+ numeratorsLidar[55.0] = overall55PSIchancesLidar * LidarmeasurementModel['55psi'][currentLidar]
+ numeratorsLidar[50.0] = overall50PSIchancesLidar * LidarmeasurementModel['50psi'][currentLidar]
+ numeratorsLidar[45.0] = overall45PSIchancesLidar * LidarmeasurementModel['45psi'][currentLidar]
+ numeratorsLidar[40.0] = overall40PSIchancesLidar * LidarmeasurementModel['40psi'][currentLidar]
+ numeratorsLidar[35.0] = overall35PSIchancesLidar * LidarmeasurementModel['35psi'][currentLidar]
+ numeratorsLidar[30.0] = overall30PSIchancesLidar * LidarmeasurementModel['30psi'][currentLidar]
+ numeratorsLidar[25.0] = overall25PSIchancesLidar * LidarmeasurementModel['25psi'][currentLidar]
+ numeratorsLidar[20.0] = overall20PSIchancesLidar * LidarmeasurementModel['20psi'][currentLidar]
+ numeratorsLidar[15.0] = overall15PSIchancesLidar * LidarmeasurementModel['15psi'][currentLidar]
+
+
+ # Now for denominators, the probability of getting this read sensor data value
+ denominatorsAccel = dict()
+ denominatorsLidar = dict()
+ denominatorsLidar[60.0] = overall60PSIchancesLidar * LidarmeasurementModel['60psi'][currentLidar]
+ denominatorsLidar[55.0] = overall55PSIchancesLidar * LidarmeasurementModel['55psi'][currentLidar]
+ denominatorsLidar[50.0] = overall50PSIchancesLidar * LidarmeasurementModel['50psi'][currentLidar]
+ denominatorsLidar[45.0] = overall45PSIchancesLidar * LidarmeasurementModel['45psi'][currentLidar]
+ denominatorsLidar[40.0] = overall40PSIchancesLidar * LidarmeasurementModel['40psi'][currentLidar]
+ denominatorsLidar[35.0] = overall35PSIchancesLidar * LidarmeasurementModel['35psi'][currentLidar]
+ denominatorsLidar[30.0] = overall30PSIchancesLidar * LidarmeasurementModel['30psi'][currentLidar]
+ denominatorsLidar[25.0] = overall25PSIchancesLidar * LidarmeasurementModel['25psi'][currentLidar]
+ denominatorsLidar[20.0] = overall20PSIchancesLidar * LidarmeasurementModel['20psi'][currentLidar]
+ denominatorsLidar[15.0] = overall15PSIchancesLidar * LidarmeasurementModel['15psi'][currentLidar]
+ denominatorsLidar[60.0] = overall60PSIchancesLidar * LidarmeasurementModel['60psi'][currentLidar]
+ denominatorsLidar[55.0] = overall55PSIchancesLidar * LidarmeasurementModel['55psi'][currentLidar]
+ denominatorsLidar[50.0] = overall50PSIchancesLidar * LidarmeasurementModel['50psi'][currentLidar]
+ denominatorsLidar[45.0] = overall45PSIchancesLidar * LidarmeasurementModel['45psi'][currentLidar]
+ denominatorsLidar[40.0] = overall40PSIchancesLidar * LidarmeasurementModel['40psi'][currentLidar]
+ denominatorsLidar[35.0] = overall35PSIchancesLidar * LidarmeasurementModel['35psi'][currentLidar]
+ denominatorsLidar[30.0] = overall30PSIchancesLidar * LidarmeasurementModel['30psi'][currentLidar]
+ denominatorsLidar[25.0] = overall25PSIchancesLidar * LidarmeasurementModel['25psi'][currentLidar]
+ denominatorsLidar[20.0] = overall20PSIchancesLidar * LidarmeasurementModel['20psi'][currentLidar]
+ denominatorsLidar[15.0] = overall15PSIchancesLidar * LidarmeasurementModel['15psi'][currentLidar]
+ denominatorAccel = denominatorsAccel[60.0] + denominatorsAccel[55.0] + denominatorsAccel[50.0] 
+   + denominatorsAccel[45.0] + denominatorsAccel[40.0] + denominatorsAccel[35.0] 
+   + denominatorsAccel[30.0] + denominatorsAccel[25.0] + denominatorsAccel[20.0] 
+   + denominatorsAccel[15.0]
+
+ denominatorLidar = denominatorsLidar[60.0] + denominatorsLidar[55.0] + denominatorsLidar[50.0] 
+   + denominatorsLidar[45.0] + denominatorsLidar[40.0] + denominatorsLidar[35.0] 
+   + denominatorsLidar[30.0] + denominatorsLidar[25.0] + denominatorsLidar[20.0] 
+   + denominatorsLidar[15.0]
+
+
+ predictionMap[15.0] = (numeratorsAccel[15.0] / denominatorAccel) + (numeratorsLidar[15.0] / denominatorLidar)
+ predictionMap[20.0] = (numeratorsAccel[20.0] / denominatorAccel) + (numeratorsLidar[20.0] / denominatorLidar)
+ predictionMap[25.0] = (numeratorsAccel[25.0] / denominatorAccel) + (numeratorsLidar[25.0] / denominatorLidar)
+ predictionMap[30.0] = (numeratorsAccel[30.0] / denominatorAccel) + (numeratorsLidar[30.0] / denominatorLidar)
+ predictionMap[35.0] = (numeratorsAccel[35.0] / denominatorAccel) + (numeratorsLidar[35.0] / denominatorLidar)
+ predictionMap[40.0] = (numeratorsAccel[40.0] / denominatorAccel) + (numeratorsLidar[40.0] / denominatorLidar)
+ predictionMap[45.0] = (numeratorsAccel[45.0] / denominatorAccel) + (numeratorsLidar[45.0] / denominatorLidar)
+ predictionMap[50.0] = (numeratorsAccel[50.0] / denominatorAccel) + (numeratorsLidar[50.0] / denominatorLidar)
+ predictionMap[55.0] = (numeratorsAccel[55.0] / denominatorAccel) + (numeratorsLidar[55.0] / denominatorLidar)
+ predictionMap[60.0] = (numeratorsAccel[60.0] / denominatorAccel) + (numeratorsLidar[60.0] / denominatorLidar)
+
