@@ -4,28 +4,29 @@ import sys
 import matplotlib
 import matplotlib.pyplot as plot
 import statistics
+from update import update
 
-filenamesAccel = ["Accel15psi.datavarholder.datavarhistogram.data",
-"Accel20psi.datavarholder.datavarhistogram.data",
-"Accel25psi.datavarholder.datavarhistogram.data",
-"Accel30psi.datavarholder.datavarhistogram.data",
-"Accel35psi.datavarholder.datavarhistogram.data",
-"Accel40psi.datavarholder.datavarhistogram.data",
-"Accel45psi.datavarholder.datavarhistogram.data",
-"Accel50psi.datavarholder.datavarhistogram.data",
-"Accel55psi.datavarholder.datavarhistogram.data",
+filenamesAccel = ["Accel15psi.datavarholder.datavarhistogram.data",\
+"Accel20psi.datavarholder.datavarhistogram.data",\
+"Accel25psi.datavarholder.datavarhistogram.data",\
+"Accel30psi.datavarholder.datavarhistogram.data",\
+"Accel35psi.datavarholder.datavarhistogram.data",\
+"Accel40psi.datavarholder.datavarhistogram.data",\
+"Accel45psi.datavarholder.datavarhistogram.data",\
+"Accel50psi.datavarholder.datavarhistogram.data",\
+"Accel55psi.datavarholder.datavarhistogram.data",\
 "Accel60psi.datavarholder.datavarhistogram.data"
 ]
 
-filenamesLidar = ["Accel15psi.datavarholder.datavarhistogram.data",
-"Accel20psi.datavarholder.datavarhistogram.data",
-"Accel25psi.datavarholder.datavarhistogram.data",
-"Accel30psi.datavarholder.datavarhistogram.data",
-"Accel35psi.datavarholder.datavarhistogram.data",
-"Accel40psi.datavarholder.datavarhistogram.data",
-"Accel45psi.datavarholder.datavarhistogram.data"
-"Accel50psi.datavarholder.datavarhistogram.data",
-"Accel55psi.datavarholder.datavarhistogram.data",
+filenamesLidar = ["Accel15psi.datavarholder.datavarhistogram.data",\
+"Accel20psi.datavarholder.datavarhistogram.data",\
+"Accel25psi.datavarholder.datavarhistogram.data",\
+"Accel30psi.datavarholder.datavarhistogram.data",\
+"Accel35psi.datavarholder.datavarhistogram.data",\
+"Accel40psi.datavarholder.datavarhistogram.data",\
+"Accel45psi.datavarholder.datavarhistogram.data",\
+"Accel50psi.datavarholder.datavarhistogram.data",\
+"Accel55psi.datavarholder.datavarhistogram.data",\
 "Accel60psi.datavarholder.datavarhistogram.data"]
 
 #Initialise measuremodel data structure keys
@@ -230,15 +231,15 @@ motion_model_15psi[60] = 0.005
 
 #do initial prediction just to get started
 tempvals = list( motion_model_60psi.values() )
-prediction1 = [x * state_probability for x in tempvals]
+prediction = [x * state_probability for x in tempvals]
 
 #Now for update1 with arbitrary values
 tempY1suchthatX1 = LidarmeasurementModel['60psi'][40.0]
-tempMult = [x * tempY1suchthatX1 for x in prediction1]
+tempMult = [x * tempY1suchthatX1 for x in prediction]
 update1 = [t*2 for t in tempMult]
 print("Update1 with arbitrary values is: "+str(update1))
 
-print("prediction1 is :"+str(prediction1))
+print("prediction1 is :"+str(prediction))
 
 
 #Current Accel, and Lidar data values
@@ -247,17 +248,17 @@ currentLidar = 20.0;
 
 #Now do the first step .... PREDICTION
 
- predictionMap = dict()
- predictionMap[15.0] = prediction1[0]
- predictionMap[20.0] = prediction[1]
- predictionMap[25.0] = prediction[2]
- predictionMap[30.0] = prediction[3]
- predictionMap[35.0] = prediction[4]
- predictionMap[40.0] = prediction[5]
- predictionMap[45.0] = prediction[6]
- predictionMap[50.0] = prediction[7] 
- predictionMap[55.0] = prediction[8]
- predictionMap[60.0] = prediction[9]
+predictionMap = dict()
+predictionMap[15.0] = prediction[0]
+predictionMap[20.0] = prediction[1]
+predictionMap[25.0] = prediction[2]
+predictionMap[30.0] = prediction[3]
+predictionMap[35.0] = prediction[4]
+predictionMap[40.0] = prediction[5]
+predictionMap[45.0] = prediction[6]
+predictionMap[50.0] = prediction[7] 
+predictionMap[55.0] = prediction[8]
+predictionMap[60.0] = prediction[9]
 
 def prediction():
  predictionOfAccelBeing60SuchThatPreviousAccelWas60psi = motion_model_60psi[60]  * predictionMap[60]
@@ -271,15 +272,15 @@ def prediction():
  predictionOfAccelBeing60SuchThatPreviousAccelWas20psi = motion_model_60psi[20] * predictionMap[20]
  predictionOfAccelBeing60SuchThatPreviousAccelWas15psi = motion_model_60psi[15] * predictionMap[15]
 
- overall60PSIchancesAccel = predictionOfAccelBeing60SuchThatPreviousAccelWas60psi + 
-predictionOfAccelBeing60SuchThatPreviousAccelWas55psi + 
-predictionOfAccelBeing60SuchThatPreviousAccelWas50psi + 
-predictionOfAccelBeing60SuchThatPreviousAccelWas45psi + 
-predictionOfAccelBeing60SuchThatPreviousAccelWas40psi + 
-predictionOfAccelBeing60SuchThatPreviousAccelWas35psi + 
-predictionOfAccelBeing60SuchThatPreviousAccelWas30psi + 
-predictionOfAccelBeing60SuchThatPreviousAccelWas25psi + 
-predictionOfAccelBeing60SuchThatPreviousAccelWas20psi + 
+ overall60PSIchancesAccel = predictionOfAccelBeing60SuchThatPreviousAccelWas60psi + \
+predictionOfAccelBeing60SuchThatPreviousAccelWas55psi + \
+predictionOfAccelBeing60SuchThatPreviousAccelWas50psi + \
+predictionOfAccelBeing60SuchThatPreviousAccelWas45psi + \
+predictionOfAccelBeing60SuchThatPreviousAccelWas40psi + \
+predictionOfAccelBeing60SuchThatPreviousAccelWas35psi + \
+predictionOfAccelBeing60SuchThatPreviousAccelWas30psi + \
+predictionOfAccelBeing60SuchThatPreviousAccelWas25psi + \
+predictionOfAccelBeing60SuchThatPreviousAccelWas20psi + \
 predictionOfAccelBeing60SuchThatPreviousAccelWas15psi
 
  predictionOfAccelBeing55SuchThatPreviousAccelWas60psi = motion_model_55psi[60]  * predictionMap[60]
@@ -293,15 +294,15 @@ predictionOfAccelBeing60SuchThatPreviousAccelWas15psi
  predictionOfAccelBeing55SuchThatPreviousAccelWas20psi = motion_model_55psi[20] * predictionMap[20]
  predictionOfAccelBeing55SuchThatPreviousAccelWas15psi = motion_model_55psi[15] * predictionMap[15]
 
- overall55PSIchancesAccel = predictionOfAccelBeing55SuchThatPreviousAccelWas60psi + 
-predictionOfAccelBeing55SuchThatPreviousAccelWas55psi + 
-predictionOfAccelBeing55SuchThatPreviousAccelWas50psi + 
-predictionOfAccelBeing55SuchThatPreviousAccelWas45psi + 
-predictionOfAccelBeing55SuchThatPreviousAccelWas40psi + 
-predictionOfAccelBeing55SuchThatPreviousAccelWas35psi + 
-predictionOfAccelBeing55SuchThatPreviousAccelWas30psi + 
-predictionOfAccelBeing55SuchThatPreviousAccelWas25psi + 
-predictionOfAccelBeing55SuchThatPreviousAccelWas20psi + 
+ overall55PSIchancesAccel = predictionOfAccelBeing55SuchThatPreviousAccelWas60psi + \
+predictionOfAccelBeing55SuchThatPreviousAccelWas55psi + \
+predictionOfAccelBeing55SuchThatPreviousAccelWas50psi + \
+predictionOfAccelBeing55SuchThatPreviousAccelWas45psi + \
+predictionOfAccelBeing55SuchThatPreviousAccelWas40psi + \
+predictionOfAccelBeing55SuchThatPreviousAccelWas35psi + \
+predictionOfAccelBeing55SuchThatPreviousAccelWas30psi + \
+predictionOfAccelBeing55SuchThatPreviousAccelWas25psi + \
+predictionOfAccelBeing55SuchThatPreviousAccelWas20psi + \
 predictionOfAccelBeing55SuchThatPreviousAccelWas15psi
 
  predictionOfAccelBeing50SuchThatPreviousAccelWas60psi = motion_model_50psi[60]  * predictionMap[60]
@@ -315,15 +316,15 @@ predictionOfAccelBeing55SuchThatPreviousAccelWas15psi
  predictionOfAccelBeing50SuchThatPreviousAccelWas20psi = motion_model_50psi[20] * predictionMap[20]
  predictionOfAccelBeing50SuchThatPreviousAccelWas15psi = motion_model_50psi[15] * predictionMap[15]
 
- overall50PSIchancesAccel = predictionOfAccelBeing50SuchThatPreviousAccelWas60psi + 
-predictionOfAccelBeing50SuchThatPreviousAccelWas55psi + 
-predictionOfAccelBeing50SuchThatPreviousAccelWas50psi + 
-predictionOfAccelBeing50SuchThatPreviousAccelWas45psi + 
-predictionOfAccelBeing50SuchThatPreviousAccelWas40psi + 
-predictionOfAccelBeing50SuchThatPreviousAccelWas35psi + 
-predictionOfAccelBeing50SuchThatPreviousAccelWas30psi + 
-predictionOfAccelBeing50SuchThatPreviousAccelWas25psi + 
-predictionOfAccelBeing50SuchThatPreviousAccelWas20psi + 
+ overall50PSIchancesAccel = predictionOfAccelBeing50SuchThatPreviousAccelWas60psi + \
+predictionOfAccelBeing50SuchThatPreviousAccelWas55psi + \
+predictionOfAccelBeing50SuchThatPreviousAccelWas50psi + \
+predictionOfAccelBeing50SuchThatPreviousAccelWas45psi + \
+predictionOfAccelBeing50SuchThatPreviousAccelWas40psi + \
+predictionOfAccelBeing50SuchThatPreviousAccelWas35psi + \
+predictionOfAccelBeing50SuchThatPreviousAccelWas30psi + \
+predictionOfAccelBeing50SuchThatPreviousAccelWas25psi + \
+predictionOfAccelBeing50SuchThatPreviousAccelWas20psi + \
 predictionOfAccelBeing50SuchThatPreviousAccelWas15psi
 
  predictionOfAccelBeing45SuchThatPreviousAccelWas60psi = motion_model_45psi[60]  * predictionMap[60]
@@ -337,15 +338,15 @@ predictionOfAccelBeing50SuchThatPreviousAccelWas15psi
  predictionOfAccelBeing45SuchThatPreviousAccelWas20psi = motion_model_45psi[20] * predictionMap[20]
  predictionOfAccelBeing45SuchThatPreviousAccelWas15psi = motion_model_45psi[15] * predictionMap[15]
 
- overall45PSIchancesAccel = predictionOfAccelBeing45SuchThatPreviousAccelWas60psi + 
-predictionOfAccelBeing45SuchThatPreviousAccelWas55psi + 
-predictionOfAccelBeing45SuchThatPreviousAccelWas50psi + 
-predictionOfAccelBeing45SuchThatPreviousAccelWas45psi + 
-predictionOfAccelBeing45SuchThatPreviousAccelWas40psi + 
-predictionOfAccelBeing45SuchThatPreviousAccelWas35psi + 
-predictionOfAccelBeing45SuchThatPreviousAccelWas30psi + 
-predictionOfAccelBeing45SuchThatPreviousAccelWas25psi + 
-predictionOfAccelBeing45SuchThatPreviousAccelWas20psi + 
+ overall45PSIchancesAccel = predictionOfAccelBeing45SuchThatPreviousAccelWas60psi + \
+predictionOfAccelBeing45SuchThatPreviousAccelWas55psi + \
+predictionOfAccelBeing45SuchThatPreviousAccelWas50psi + \
+predictionOfAccelBeing45SuchThatPreviousAccelWas45psi + \
+predictionOfAccelBeing45SuchThatPreviousAccelWas40psi + \
+predictionOfAccelBeing45SuchThatPreviousAccelWas35psi + \
+predictionOfAccelBeing45SuchThatPreviousAccelWas30psi + \
+predictionOfAccelBeing45SuchThatPreviousAccelWas25psi + \
+predictionOfAccelBeing45SuchThatPreviousAccelWas20psi + \
 predictionOfAccelBeing45SuchThatPreviousAccelWas15psi
 
  predictionOfAccelBeing40SuchThatPreviousAccelWas60psi = motion_model_40psi[60]  * predictionMap[60]
@@ -359,15 +360,15 @@ predictionOfAccelBeing45SuchThatPreviousAccelWas15psi
  predictionOfAccelBeing40SuchThatPreviousAccelWas20psi = motion_model_40psi[20] * predictionMap[20]
  predictionOfAccelBeing40SuchThatPreviousAccelWas15psi = motion_model_40psi[15] * predictionMap[15]
 
- overall40PSIchancesAccel = predictionOfAccelBeing40SuchThatPreviousAccelWas60psi + 
-predictionOfAccelBeing40SuchThatPreviousAccelWas55psi + 
-predictionOfAccelBeing40SuchThatPreviousAccelWas50psi + 
-predictionOfAccelBeing40SuchThatPreviousAccelWas45psi + 
-predictionOfAccelBeing40SuchThatPreviousAccelWas40psi + 
-predictionOfAccelBeing40SuchThatPreviousAccelWas35psi + 
-predictionOfAccelBeing40SuchThatPreviousAccelWas30psi + 
-predictionOfAccelBeing40SuchThatPreviousAccelWas25psi + 
-predictionOfAccelBeing40SuchThatPreviousAccelWas20psi + 
+ overall40PSIchancesAccel = predictionOfAccelBeing40SuchThatPreviousAccelWas60psi + \
+predictionOfAccelBeing40SuchThatPreviousAccelWas55psi + \
+predictionOfAccelBeing40SuchThatPreviousAccelWas50psi + \
+predictionOfAccelBeing40SuchThatPreviousAccelWas45psi + \
+predictionOfAccelBeing40SuchThatPreviousAccelWas40psi + \
+predictionOfAccelBeing40SuchThatPreviousAccelWas35psi + \
+predictionOfAccelBeing40SuchThatPreviousAccelWas30psi + \
+predictionOfAccelBeing40SuchThatPreviousAccelWas25psi + \
+predictionOfAccelBeing40SuchThatPreviousAccelWas20psi + \
 predictionOfAccelBeing40SuchThatPreviousAccelWas15psi
 
  predictionOfAccelBeing35SuchThatPreviousAccelWas60psi = motion_model_35psi[60]  * predictionMap[60]
@@ -381,15 +382,15 @@ predictionOfAccelBeing40SuchThatPreviousAccelWas15psi
  predictionOfAccelBeing35SuchThatPreviousAccelWas20psi = motion_model_35psi[20] * predictionMap[20]
  predictionOfAccelBeing35SuchThatPreviousAccelWas15psi = motion_model_35psi[15] * predictionMap[15]
 
- overall35PSIchancesAccel = predictionOfAccelBeing35SuchThatPreviousAccelWas60psi + 
-predictionOfAccelBeing35SuchThatPreviousAccelWas55psi + 
-predictionOfAccelBeing35SuchThatPreviousAccelWas50psi + 
-predictionOfAccelBeing35SuchThatPreviousAccelWas45psi + 
-predictionOfAccelBeing35SuchThatPreviousAccelWas40psi + 
-predictionOfAccelBeing35SuchThatPreviousAccelWas35psi + 
-predictionOfAccelBeing35SuchThatPreviousAccelWas30psi + 
-predictionOfAccelBeing35SuchThatPreviousAccelWas25psi + 
-predictionOfAccelBeing35SuchThatPreviousAccelWas20psi + 
+ overall35PSIchancesAccel = predictionOfAccelBeing35SuchThatPreviousAccelWas60psi + \
+predictionOfAccelBeing35SuchThatPreviousAccelWas55psi + \
+predictionOfAccelBeing35SuchThatPreviousAccelWas50psi + \
+predictionOfAccelBeing35SuchThatPreviousAccelWas45psi + \
+predictionOfAccelBeing35SuchThatPreviousAccelWas40psi + \
+predictionOfAccelBeing35SuchThatPreviousAccelWas35psi + \
+predictionOfAccelBeing35SuchThatPreviousAccelWas30psi + \
+predictionOfAccelBeing35SuchThatPreviousAccelWas25psi + \
+predictionOfAccelBeing35SuchThatPreviousAccelWas20psi + \
 predictionOfAccelBeing35SuchThatPreviousAccelWas15psi
 
  predictionOfAccelBeing30SuchThatPreviousAccelWas60psi = motion_model_30psi[60]  * predictionMap[60]
@@ -403,15 +404,15 @@ predictionOfAccelBeing35SuchThatPreviousAccelWas15psi
  predictionOfAccelBeing35SuchThatPreviousAccelWas20psi = motion_model_30psi[20] * predictionMap[20]
  predictionOfAccelBeing35SuchThatPreviousAccelWas15psi = motion_model_30psi[15] * predictionMap[15]
 
- overall30PSIchancesAccel = predictionOfAccelBeing30SuchThatPreviousAccelWas60psi + 
-predictionOfAccelBeing30SuchThatPreviousAccelWas55psi + 
-predictionOfAccelBeing30SuchThatPreviousAccelWas50psi + 
-predictionOfAccelBeing30SuchThatPreviousAccelWas45psi + 
-predictionOfAccelBeing30SuchThatPreviousAccelWas40psi + 
-predictionOfAccelBeing30SuchThatPreviousAccelWas35psi + 
-predictionOfAccelBeing30SuchThatPreviousAccelWas30psi + 
-predictionOfAccelBeing30SuchThatPreviousAccelWas25psi + 
-predictionOfAccelBeing30SuchThatPreviousAccelWas20psi + 
+ overall30PSIchancesAccel = predictionOfAccelBeing30SuchThatPreviousAccelWas60psi + \
+predictionOfAccelBeing30SuchThatPreviousAccelWas55psi + \
+predictionOfAccelBeing30SuchThatPreviousAccelWas50psi + \
+predictionOfAccelBeing30SuchThatPreviousAccelWas45psi + \
+predictionOfAccelBeing30SuchThatPreviousAccelWas40psi + \
+predictionOfAccelBeing30SuchThatPreviousAccelWas35psi + \
+predictionOfAccelBeing30SuchThatPreviousAccelWas30psi + \
+predictionOfAccelBeing30SuchThatPreviousAccelWas25psi + \
+predictionOfAccelBeing30SuchThatPreviousAccelWas20psi + \
 predictionOfAccelBeing30SuchThatPreviousAccelWas15psi
 
  predictionOfAccelBeing25SuchThatPreviousAccelWas60psi = motion_model_25psi[60]  * predictionMap[60]
@@ -425,15 +426,15 @@ predictionOfAccelBeing30SuchThatPreviousAccelWas15psi
  predictionOfAccelBeing25SuchThatPreviousAccelWas20psi = motion_model_25psi[20] * predictionMap[20]
  predictionOfAccelBeing25SuchThatPreviousAccelWas15psi = motion_model_25psi[15] * predictionMap[15]
 
- overall25PSIchancesAccel = predictionOfAccelBeing25SuchThatPreviousAccelWas60psi + 
-predictionOfAccelBeing25SuchThatPreviousAccelWas55psi + 
-predictionOfAccelBeing25SuchThatPreviousAccelWas50psi + 
-predictionOfAccelBeing25SuchThatPreviousAccelWas45psi + 
-predictionOfAccelBeing25SuchThatPreviousAccelWas40psi + 
-predictionOfAccelBeing25SuchThatPreviousAccelWas35psi + 
-predictionOfAccelBeing25SuchThatPreviousAccelWas30psi + 
-predictionOfAccelBeing25SuchThatPreviousAccelWas25psi + 
-predictionOfAccelBeing25SuchThatPreviousAccelWas20psi + 
+ overall25PSIchancesAccel = predictionOfAccelBeing25SuchThatPreviousAccelWas60psi + \
+predictionOfAccelBeing25SuchThatPreviousAccelWas55psi + \
+predictionOfAccelBeing25SuchThatPreviousAccelWas50psi + \
+predictionOfAccelBeing25SuchThatPreviousAccelWas45psi + \
+predictionOfAccelBeing25SuchThatPreviousAccelWas40psi + \
+predictionOfAccelBeing25SuchThatPreviousAccelWas35psi + \
+predictionOfAccelBeing25SuchThatPreviousAccelWas30psi + \
+predictionOfAccelBeing25SuchThatPreviousAccelWas25psi + \
+predictionOfAccelBeing25SuchThatPreviousAccelWas20psi + \
 predictionOfAccelBeing25SuchThatPreviousAccelWas15psi
 
  predictionOfAccelBeing20SuchThatPreviousAccelWas60psi = motion_model_20psi[60]  * predictionMap[60]
@@ -447,15 +448,15 @@ predictionOfAccelBeing25SuchThatPreviousAccelWas15psi
  predictionOfAccelBeing20SuchThatPreviousAccelWas20psi = motion_model_20psi[20] * predictionMap[20]
  predictionOfAccelBeing20SuchThatPreviousAccelWas15psi = motion_model_20psi[15] * predictionMap[15]
 
- overall20PSIchancesAccel = predictionOfAccelBeing20SuchThatPreviousAccelWas60psi + 
-predictionOfAccelBeing20SuchThatPreviousAccelWas55psi + 
-predictionOfAccelBeing20SuchThatPreviousAccelWas50psi + 
-predictionOfAccelBeing20SuchThatPreviousAccelWas45psi + 
-predictionOfAccelBeing20SuchThatPreviousAccelWas40psi + 
-predictionOfAccelBeing20SuchThatPreviousAccelWas35psi + 
-predictionOfAccelBeing20SuchThatPreviousAccelWas30psi + 
-predictionOfAccelBeing20SuchThatPreviousAccelWas25psi + 
-predictionOfAccelBeing20SuchThatPreviousAccelWas20psi + 
+ overall20PSIchancesAccel = predictionOfAccelBeing20SuchThatPreviousAccelWas60psi + \
+predictionOfAccelBeing20SuchThatPreviousAccelWas55psi + \
+predictionOfAccelBeing20SuchThatPreviousAccelWas50psi + \
+predictionOfAccelBeing20SuchThatPreviousAccelWas45psi + \
+predictionOfAccelBeing20SuchThatPreviousAccelWas40psi + \
+predictionOfAccelBeing20SuchThatPreviousAccelWas35psi + \
+predictionOfAccelBeing20SuchThatPreviousAccelWas30psi + \
+predictionOfAccelBeing20SuchThatPreviousAccelWas25psi + \
+predictionOfAccelBeing20SuchThatPreviousAccelWas20psi + \
 predictionOfAccelBeing20SuchThatPreviousAccelWas15psi
 
  predictionOfAccelBeing15SuchThatPreviousAccelWas60psi = motion_model_15psi[60]  * predictionMap[60]
@@ -469,15 +470,15 @@ predictionOfAccelBeing20SuchThatPreviousAccelWas15psi
  predictionOfAccelBeing15SuchThatPreviousAccelWas20psi = motion_model_15psi[20] * predictionMap[20]
  predictionOfAccelBeing15SuchThatPreviousAccelWas15psi = motion_model_15psi[15] * predictionMap[15]
 
- overall15PSIchancesAccel = predictionOfAccelBeing15SuchThatPreviousAccelWas60psi + 
-predictionOfAccelBeing15SuchThatPreviousAccelWas55psi + 
-predictionOfAccelBeing15SuchThatPreviousAccelWas50psi + 
-predictionOfAccelBeing15SuchThatPreviousAccelWas45psi + 
-predictionOfAccelBeing15SuchThatPreviousAccelWas40psi + 
-predictionOfAccelBeing15SuchThatPreviousAccelWas35psi + 
-predictionOfAccelBeing15SuchThatPreviousAccelWas30psi + 
-predictionOfAccelBeing15SuchThatPreviousAccelWas25psi + 
-predictionOfAccelBeing15SuchThatPreviousAccelWas20psi + 
+ overall15PSIchancesAccel = predictionOfAccelBeing15SuchThatPreviousAccelWas60psi + \
+predictionOfAccelBeing15SuchThatPreviousAccelWas55psi + \
+predictionOfAccelBeing15SuchThatPreviousAccelWas50psi + \
+predictionOfAccelBeing15SuchThatPreviousAccelWas45psi + \
+predictionOfAccelBeing15SuchThatPreviousAccelWas40psi + \
+predictionOfAccelBeing15SuchThatPreviousAccelWas35psi + \
+predictionOfAccelBeing15SuchThatPreviousAccelWas30psi + \
+predictionOfAccelBeing15SuchThatPreviousAccelWas25psi + \
+predictionOfAccelBeing15SuchThatPreviousAccelWas20psi + \
 predictionOfAccelBeing15SuchThatPreviousAccelWas15psi
 
  predictionMapAccel = dict()
@@ -493,24 +494,135 @@ predictionOfAccelBeing15SuchThatPreviousAccelWas15psi
  predictionMapAccel[60.0] = overall60PSIchancesAccel
 
 #2nd step is preprocessing incoming data e.g. filter, get variance, fit into bucket
-currentAccel = next line of data
-currentLidar = next line of data
-TOOOOOOOOO DOOOOOOOOOOOOOOOO 
+#currentAccel = next line of data
+#currentLidar = next line of data
 
 #for filename in filenamesLidar:
 datafile = open("Accel15psi.data","r")
- Lines = lefile.readlines() 
- counter = 0
- datablock = []
- for line in Lines: 
+Lines = lefile.readlines() 
+counter = 0
+datablock = []
+for line in Lines:
   counter += 1
   if counter < 10:
     val = float(line)
+    datablock.append(val)
+  else:
+    counter = 0
+    var = statistics.variance(datablock)
+
+ 
     #Now put into bucket
-    if val 
+    if var < 0.05:
+      var = 0
+    elif (var >= 0.05) and (var < 0.1):
+      var = 0.05
+    elif (var >= 0.1) and (var < 0.2):
+      var = 0.1
+    elif (var >= 0.2) and (var < 0.3):
+      var = 0.2
+    elif (var >= 0.3) and (var < 0.4):
+      var = 0.3
+    elif (var >= 0.4) and (var < 0.5):
+      var = 0.4
+    elif (var >= 0.5) and (var < 0.6):
+      var = 0.5
+    elif (var >= 0.6) and (var < 0.7):
+      var = 0.6
+    elif (var >= 0.7) and (var < 0.8):
+      var = 0.7
+    elif (var >= 0.8) and (var < 0.9):
+      var = 0.8
+    elif (var >= 0.9) and (var < 1.0):
+      var = 0.9
+    elif (var >= 1.0) and (var <1.5):
+      var = 1.0
+    elif (var >= 1.5) and (var < 2.0):
+      var = 1.5
+    elif (var >= 2.0) and (var < 2.5):
+      var = 2.0
+    elif (var >= 2.5) and (var < 3.0):
+      var = 2.5
+    elif (var >= 3.0) and (var < 4.0):
+      var = 3.0
+    elif (var >= 4.0) and (var < 5.0):
+      var = 4.0
+    elif (var >= 5.0) and (var < 6.0):
+      var = 5.0
+    elif (var >= 6.0) and (var < 7.0):
+      var = 6.0
+    elif (var >= 7.0) and (var < 8.0):
+      var = 7.0
+    elif (var >= 8.0) and (var < 9.0):
+      var = 8.0
+    elif (var >= 9.0) and (var < 10.0):
+      var = 9.0
+    elif (var >= 10.0) and (var < 20.0):
+      var = 10.0
+    elif (var >= 20.0) and (var < 30.0):
+      var = 20.0
+    elif (var >= 30.0) and (var < 40.0):
+      var = 30.0
+    elif (var >= 40.0) and (var < 50.0):
+      var = 40.0
+    elif (var >= 50.0) and (var < 60.0):
+      var = 50.0
+    elif (var >= 60.0) and (var < 70.0):
+      var = 60.0
+    elif (var >= 70.0) and (var < 80.0):
+      var = 70.0
+    elif (var >= 80.0) and (var < 90.0):
+      var = 80.0
+    elif (var >= 90.0) and (var < 100.0):
+      var = 90.0
+    elif (var >= 100.0) and (var < 200.0):
+      var = 100.0
+    elif (var >= 200.0) and (var < 300.0):
+      var = 200.0
+    elif (var >= 300.0) and (var < 400.0):
+      var = 300.0
+    elif (var >= 400.0) and (var < 500.0):
+      var = 400.0
+    elif (var >= 500.0) and (var < 600.0):
+      var = 500.0
+    elif (var >= 600.0) and (var < 700.0):
+      var = 600.0
+    elif (var >= 700.0) and (var < 800.0):
+      var = 700.0
+    elif (var >= 800.0) and (var < 900.0):
+      var = 800.0
+    elif (var >= 900.0) and (var < 1000.0):
+      var = 900.0
+    elif (var >= 1000.0) and (var < 1200.0):
+      var = 1000.0
+    elif (var >= 1200.0) and (var < 1400.0):
+      var = 1200.0
+    elif (var >= 1400.0) and (var < 1600.0):
+      var = 1400.0
+    elif (var >= 1600.0) and (var < 1800.0):
+      var = 1600.0
+    elif (var >= 1800.0) and (var < 2000.0):
+      var = 1800.0
+    elif (var >= 2000.0) and (var < 2200.0):
+      var = 2000.0
+    elif (var >= 2500.0) and (var < 3000.0):
+      var = 2500.0
+    elif (var >= 3000.0) and (var < 3500.0):
+      var = 3000.0
+    elif (var >= 3500.0) and (var < 4000.0):
+      var = 3500.0
+    elif (var >= 4000.0) and (var < 4500.0):
+      var = 4000.0
+    elif (var >= 4500.0) and (var < 5000.0):
+      var = 4500.0
+    elif (var >= 5000.0):
+      var = 5000.00
 
-
-
+  currentAccel = var #put our current data variance into currentAccel which gets used in update()
+  currentLidar = 0.0
+  prediction()
+  update()
+  print("Predictionmap is currently"+predictionMap)
 #3rd step is update
 def update():
  #For each possible state do (measurement_model * prediction) / 
@@ -566,14 +678,14 @@ def update():
  denominatorsLidar[25.0] = overall25PSIchancesLidar * LidarmeasurementModel['25psi'][currentLidar]
  denominatorsLidar[20.0] = overall20PSIchancesLidar * LidarmeasurementModel['20psi'][currentLidar]
  denominatorsLidar[15.0] = overall15PSIchancesLidar * LidarmeasurementModel['15psi'][currentLidar]
- denominatorAccel = denominatorsAccel[60.0] + denominatorsAccel[55.0] + denominatorsAccel[50.0] 
-   + denominatorsAccel[45.0] + denominatorsAccel[40.0] + denominatorsAccel[35.0] 
-   + denominatorsAccel[30.0] + denominatorsAccel[25.0] + denominatorsAccel[20.0] 
+ denominatorAccel = denominatorsAccel[60.0] + denominatorsAccel[55.0] + denominatorsAccel[50.0] \
+   + denominatorsAccel[45.0] + denominatorsAccel[40.0] + denominatorsAccel[35.0] \
+   + denominatorsAccel[30.0] + denominatorsAccel[25.0] + denominatorsAccel[20.0] \
    + denominatorsAccel[15.0]
 
- denominatorLidar = denominatorsLidar[60.0] + denominatorsLidar[55.0] + denominatorsLidar[50.0] 
-   + denominatorsLidar[45.0] + denominatorsLidar[40.0] + denominatorsLidar[35.0] 
-   + denominatorsLidar[30.0] + denominatorsLidar[25.0] + denominatorsLidar[20.0] 
+ denominatorLidar = denominatorsLidar[60.0] + denominatorsLidar[55.0] + denominatorsLidar[50.0] \
+   + denominatorsLidar[45.0] + denominatorsLidar[40.0] + denominatorsLidar[35.0] \
+   + denominatorsLidar[30.0] + denominatorsLidar[25.0] + denominatorsLidar[20.0] \
    + denominatorsLidar[15.0]
 
 
