@@ -6,6 +6,9 @@ import matplotlib
 import matplotlib.pyplot as plot
 import statistics
 
+#NB run using python3 simulation.py acceldatafilename lidardatafilename
+# e.g. python3 simulation.py Accel45psi Lidar45psi
+
 filenamesAccel = ["Accel15psi.datavarholder.datavarhistogram.data",\
 "Accel20psi.datavarholder.datavarhistogram.data",\
 "Accel25psi.datavarholder.datavarhistogram.data",\
@@ -252,6 +255,7 @@ currentLidar = 20.0;
 
 #Now do the first step .... PREDICTION
 
+global predictionMap 
 predictionMap = dict()
 predictionMap[15.0] = prediction[0]
 predictionMap[20.0] = prediction[1]
@@ -294,7 +298,7 @@ overall15PSIchancesLidar = 0.0
 
 def bucket_the_value(var):
  if var < 0.05:
-      var = 0
+      var = 0.0
  elif (var >= 0.05) and (var < 0.1):
       var = 0.05
  elif (var >= 0.1) and (var < 0.2):
@@ -325,6 +329,8 @@ def bucket_the_value(var):
       var = 2.5
  elif (var >= 3.0) and (var < 4.0):
       var = 3.0
+ elif (var >= 3.5) and (var < 4.0):
+      var = 3.5
  elif (var >= 4.0) and (var < 5.0):
       var = 4.0
  elif (var >= 5.0) and (var < 6.0):
@@ -337,8 +343,54 @@ def bucket_the_value(var):
       var = 8.0
  elif (var >= 9.0) and (var < 10.0):
       var = 9.0
- elif (var >= 10.0) and (var < 20.0):
+ #elif (var >= 4.0) and (var < 4.5):
+ #  var = 4.0
+ #elif (var >= 4.5) and (var < 5.0):
+ #  var = 4.5
+ #elif (var >= 5.0) and (var < 5.5):
+ #  var = 5.0
+ #elif (var >= 5.5) and (var < 6.0):
+ #  var = 5.5
+ #elif (var >= 6.0) and (var < 6.5): 
+ #  var = 6.0
+ #elif (var >= 6.5) and (var < 7.0):
+ #  var = 6.5
+ #elif (var >= 7.0) and (var < 7.5):
+ #  var = 7.0
+ #elif (var >= 7.5) and (var < 8.0):
+ #  var = 7.5
+ #elif (var >= 8.0) and (var < 8.5):
+ #  var = 8.0
+ #elif (var >= 8.5) and (var < 9.0):
+ #  var = 8.5
+ #elif (var >= 9.0) and (var < 9.5):
+ #  var = 9.0
+ #elif (var >= 9.5) and (var < 10.0):
+ #  var = 9.5
+ elif (var >=10) and (var < 20.0):
       var = 10.0
+ #elif (var >= 10.0) and (var < 10.5):
+ #  var = 10.0
+ #elif (var >= 10.5) and (var < 11.0):
+ #  var = 10.5
+ #elif (var >= 11.0) and (var < 12.0):
+ #  var = 11.0
+ #elif (var >= 12.0) and (var < 13.0):
+ #  var = 12.0
+ #elif (var >= 13.0) and (var < 14.0):
+ #  var = 13.0
+ #elif (var >= 14.0) and (var < 15.0):
+ #  var = 14.0
+ #elif (var >= 15.0) and (var < 16.0):
+ #     var = 15.0
+ #elif (var >= 16.0) and (var < 17.0): 
+ #     var = 16.0
+ #elif (var >= 17.0) and (var < 18.0): 
+ #     var = 17.0
+ #elif (var >= 18.0) and (var < 19.0):
+ #     var = 18.0
+ #elif (var >= 19.0) and (var < 20.0):
+ #     var = 19.0
  elif (var >= 20.0) and (var < 30.0):
       var = 20.0
  elif (var >= 30.0) and (var < 40.0):
@@ -390,7 +442,7 @@ def bucket_the_value(var):
  elif (var >= 3000.0) and (var < 3500.0):
       var = 3000.0
  elif (var >= 3500.0):
-      var = 3500
+      var = 3500.0
  return var
 
 def prediction():
@@ -685,6 +737,7 @@ def update(currentAccel,currentLidar):
  numeratorsLidar[25.0] = overall25PSIchancesLidar * LidarmeasurementModel['25psi'][currentLidar]
  numeratorsLidar[20.0] = overall20PSIchancesLidar * LidarmeasurementModel['20psi'][currentLidar]
  numeratorsLidar[15.0] = overall15PSIchancesLidar * LidarmeasurementModel['15psi'][currentLidar]
+ print("numerator lidar 60 for currentLidar var of "+str(currentLidar)+":"+str(numeratorsLidar[60.0]))
 
 # Now for denominators, the probability of getting this read sensor data value
  denominatorsAccel = dict()
@@ -700,16 +753,16 @@ def update(currentAccel,currentLidar):
  denominatorsAccel[25.0] = overall25PSIchancesAccel * AccelmeasurementModel['25psi'][currentAccel]
  denominatorsAccel[20.0] = overall20PSIchancesAccel * AccelmeasurementModel['20psi'][currentAccel]
  denominatorsAccel[15.0] = overall15PSIchancesAccel * AccelmeasurementModel['15psi'][currentAccel]
- denominatorsAccel[60.0] = overall60PSIchancesAccel * AccelmeasurementModel['60psi'][currentAccel]
- denominatorsAccel[55.0] = overall55PSIchancesAccel * AccelmeasurementModel['55psi'][currentAccel]
- denominatorsAccel[50.0] = overall50PSIchancesAccel * AccelmeasurementModel['50psi'][currentAccel]
- denominatorsAccel[45.0] = overall45PSIchancesAccel * AccelmeasurementModel['45psi'][currentAccel]
- denominatorsAccel[40.0] = overall40PSIchancesAccel * AccelmeasurementModel['40psi'][currentAccel]
- denominatorsAccel[35.0] = overall35PSIchancesAccel * AccelmeasurementModel['35psi'][currentAccel]
- denominatorsAccel[30.0] = overall30PSIchancesAccel * AccelmeasurementModel['30psi'][currentAccel]
- denominatorsAccel[25.0] = overall25PSIchancesAccel * AccelmeasurementModel['25psi'][currentAccel]
- denominatorsAccel[20.0] = overall20PSIchancesAccel * AccelmeasurementModel['20psi'][currentAccel]
- denominatorsAccel[15.0] = overall15PSIchancesAccel * AccelmeasurementModel['15psi'][currentAccel]
+# denominatorsAccel[60.0] = overall60PSIchancesAccel * AccelmeasurementModel['60psi'][currentAccel]
+# denominatorsAccel[55.0] = overall55PSIchancesAccel * AccelmeasurementModel['55psi'][currentAccel]
+# denominatorsAccel[50.0] = overall50PSIchancesAccel * AccelmeasurementModel['50psi'][currentAccel]
+# denominatorsAccel[45.0] = overall45PSIchancesAccel * AccelmeasurementModel['45psi'][currentAccel]
+# denominatorsAccel[40.0] = overall40PSIchancesAccel * AccelmeasurementModel['40psi'][currentAccel]
+# denominatorsAccel[35.0] = overall35PSIchancesAccel * AccelmeasurementModel['35psi'][currentAccel]
+# denominatorsAccel[30.0] = overall30PSIchancesAccel * AccelmeasurementModel['30psi'][currentAccel]
+# denominatorsAccel[25.0] = overall25PSIchancesAccel * AccelmeasurementModel['25psi'][currentAccel]
+# denominatorsAccel[20.0] = overall20PSIchancesAccel * AccelmeasurementModel['20psi'][currentAccel]
+# denominatorsAccel[15.0] = overall15PSIchancesAccel * AccelmeasurementModel['15psi'][currentAccel]
 
  denominatorsLidar[60.0] = overall60PSIchancesLidar * LidarmeasurementModel['60psi'][currentLidar]
  denominatorsLidar[55.0] = overall55PSIchancesLidar * LidarmeasurementModel['55psi'][currentLidar]
@@ -721,16 +774,16 @@ def update(currentAccel,currentLidar):
  denominatorsLidar[25.0] = overall25PSIchancesLidar * LidarmeasurementModel['25psi'][currentLidar]
  denominatorsLidar[20.0] = overall20PSIchancesLidar * LidarmeasurementModel['20psi'][currentLidar]
  denominatorsLidar[15.0] = overall15PSIchancesLidar * LidarmeasurementModel['15psi'][currentLidar]
- denominatorsLidar[60.0] = overall60PSIchancesLidar * LidarmeasurementModel['60psi'][currentLidar]
- denominatorsLidar[55.0] = overall55PSIchancesLidar * LidarmeasurementModel['55psi'][currentLidar]
- denominatorsLidar[50.0] = overall50PSIchancesLidar * LidarmeasurementModel['50psi'][currentLidar]
- denominatorsLidar[45.0] = overall45PSIchancesLidar * LidarmeasurementModel['45psi'][currentLidar]
- denominatorsLidar[40.0] = overall40PSIchancesLidar * LidarmeasurementModel['40psi'][currentLidar]
- denominatorsLidar[35.0] = overall35PSIchancesLidar * LidarmeasurementModel['35psi'][currentLidar]
- denominatorsLidar[30.0] = overall30PSIchancesLidar * LidarmeasurementModel['30psi'][currentLidar]
- denominatorsLidar[25.0] = overall25PSIchancesLidar * LidarmeasurementModel['25psi'][currentLidar]
- denominatorsLidar[20.0] = overall20PSIchancesLidar * LidarmeasurementModel['20psi'][currentLidar]
- denominatorsLidar[15.0] = overall15PSIchancesLidar * LidarmeasurementModel['15psi'][currentLidar]
+ #denominatorsLidar[60.0] = overall60PSIchancesLidar * LidarmeasurementModel['60psi'][currentLidar]
+ #denominatorsLidar[55.0] = overall55PSIchancesLidar * LidarmeasurementModel['55psi'][currentLidar]
+ #denominatorsLidar[50.0] = overall50PSIchancesLidar * LidarmeasurementModel['50psi'][currentLidar]
+ #denominatorsLidar[45.0] = overall45PSIchancesLidar * LidarmeasurementModel['45psi'][currentLidar]
+ #denominatorsLidar[40.0] = overall40PSIchancesLidar * LidarmeasurementModel['40psi'][currentLidar]
+ #denominatorsLidar[35.0] = overall35PSIchancesLidar * LidarmeasurementModel['35psi'][currentLidar]
+ #denominatorsLidar[30.0] = overall30PSIchancesLidar * LidarmeasurementModel['30psi'][currentLidar]
+ #denominatorsLidar[25.0] = overall25PSIchancesLidar * LidarmeasurementModel['25psi'][currentLidar]
+ #denominatorsLidar[20.0] = overall20PSIchancesLidar * LidarmeasurementModel['20psi'][currentLidar]
+ #denominatorsLidar[15.0] = overall15PSIchancesLidar * LidarmeasurementModel['15psi'][currentLidar]
  denominatorAccel = denominatorsAccel[60.0] + denominatorsAccel[55.0] + denominatorsAccel[50.0] \
    + denominatorsAccel[45.0] + denominatorsAccel[40.0] + denominatorsAccel[35.0] \
    + denominatorsAccel[30.0] + denominatorsAccel[25.0] + denominatorsAccel[20.0] \
@@ -740,6 +793,8 @@ def update(currentAccel,currentLidar):
    + denominatorsLidar[45.0] + denominatorsLidar[40.0] + denominatorsLidar[35.0] \
    + denominatorsLidar[30.0] + denominatorsLidar[25.0] + denominatorsLidar[20.0] \
    + denominatorsLidar[15.0]
+
+ print("denominator accel is "+str(denominatorAccel)+", and denom Lidar is "+str(denominatorLidar))
 
  if denominatorAccel == 0:
    denominatorAccel = 0.000001
@@ -763,34 +818,57 @@ def update(currentAccel,currentLidar):
 print("just about to open a data file")
 
 #for filename in filenamesLidar:
-datafile = open("Accel60psi.data","r")
-datafileLidar = open("Lidar60psi.data","r")
+acceldataname = sys.argv[1]
+lidardataname = sys.argv[2]
+datafile = open(acceldataname,"r") #open("Accel15psi.data","r")
+datafileLidar = open(lidardataname,"r")  #open("Lidar15psi.data","r")
 Lines = datafile.readlines() 
 LinesLidar = datafileLidar.readlines()
 counter = 0
+blockcounter = 0
 datablockAccel = []
 datablockLidar = []
 print("just about to iterate over lines")
 linecount = -1
+FIRlist = []
+last10Lidarvar = []
+varmode = 0.0
+stats = []
 for line in Lines:
   counter += 1
   linecount += 1
   var = 0.0
-  if counter < 10:
+  if counter < 5: #each datablock to be considered will have this many values
     separated = line.split(',')
     val = float(separated[0])
+    if len(FIRlist) > 3: #once list fills up, need to make space
+      FIRlist = FIRlist[1:] # remove first item aka oldest item
+      FIRlist.append(val)
+    else:
+      FIRlist.append(val)
+    #FIR Filter
+    if linecount > 4: #ensure there are at least 4 previous values
+      val = 0.2*FIRlist[0] + 0.2*FIRlist[1] + 0.2*FIRlist[2] + 0.2*FIRlist[3]
     datablockAccel.append(val)
-    print("just appended"+str(val)+" to datablock")
+    print("just appended FIR'd value of "+str(val)+" to datablock")
 
     sepLidar = LinesLidar[linecount].split(',')
     valLidar = float(sepLidar[0])
     if(valLidar > 700):
-     valLidar = 475
+      valLidar = 475
     datablockLidar.append(valLidar)
   else:
     counter = 0
+    blockcounter += 1
     var = statistics.variance(datablockAccel)
     varLidar = statistics.variance(datablockLidar)
+    #last10Lidarvar.append(varLidar)
+    #if len(last10Lidarvar) > 10:
+    # varmode = statistics.mode(last10Lidarvar)
+    # varmode = bucket_the_value(varmode)
+    # last10Lidarvar = []
+    print("lidar var mode is")
+    print(varmode)
     print("datablock contains")
     print(datablockAccel)
     datablockAccel = []
@@ -804,15 +882,53 @@ for line in Lines:
     print("got to linecount check, linecount is: "+str(linecount))
     #if linecount < 25:
     currentAccel = var #put our current data variance into currentAccel which gets used in update()
-    currentLidar = varLidar
+    currentLidar = varLidar #varmode
     prediction()
     update(currentAccel,currentLidar)
     print("Predictionmap is currently")
     print(predictionMap)
+
+    #Now normalise the prediction map
+    normalisedMap = dict(predictionMap)
+    #Find the max value...
+    max = 0
+    for x in predictionMap.items():
+     if x[1] > max:
+      max = x[1]
+    #ensure max is a value if zero
+    #if max == 0: 
+    # max = 0.000001
+    for kv in normalisedMap.items():
+     normalisedMap[kv[0]] = kv[1]/max
+    predictionMap = dict(normalisedMap)
+    print("Predictionmap is currently")
+    print(predictionMap)
+  
+    statsMax = 0.0
+    chosenPsi = 15.0
+    # now keep some stats :) 
+    for p in predictionMap.items():
+     if p[1] > statsMax:
+      statsMax = p[1]
+      chosenPsi = p[0]
+    print("appending "+str(chosenPsi)+" to stats")
+    stats.append(chosenPsi) # keep a record of chosenPSI found each time :)
+    
+    print("length of stats is "+str(len(stats)))
+    if len(stats) > 2:
+     print("checking last few of stats: "+str(stats[-1])+" "+str(stats[-2]) )
+     maxSoFar = 50.0
+     for x in stats:
+       if x > maxSoFar:
+        maxSoFar = x
+     modeSoFar = statistics.mode(stats)
+     print("Mode of stats : "+str(modeSoFar))
+     meanSoFar = statistics.mean(stats)
+     print("Mean of stats : "+str(meanSoFar))
+    
     #else:
     # exit()
 #3rd step is update
-
 
 
 

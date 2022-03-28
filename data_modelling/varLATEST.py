@@ -225,9 +225,25 @@ for filename in filenamesLidar:
  lidarVariances = [] # list of variances for window size chunks through the file
  lidarMeans = []
  lidarModes = []
+ varcounter = 0
+ themode = 0.0
+ blockcounter = 0
+ last10var = []
  while upper < len(lidarList):
    lidarVariances.append( statistics.variance(lidarList[lower:upper]) )
    writerVars.write(str(statistics.variance(lidarList[lower:upper]))+"\n")
+   #thevar = statistics.variance(lidarList[lower:upper])
+   #last10var.append(thevar)
+   #blockcounter += 1
+   #varcounter += 1
+   #if blockcounter > 10:
+   #  themode = statistics.mode(last10var)
+   #  last10var = []
+   #  varcounter = 0
+   #  blockcounter = 0
+   #if(themode < 0.0000001):
+   # themode = 0.00001
+   #writerVars.write( str(themode)+"\n" )
    lidarMeans.append( statistics.mean(lidarList[lower:upper])  )
    lidarModes.append( statistics.mode(lidarList[lower:upper])  )
    #yVariances.append( statistics.variance(yList[lower:upper]) )
@@ -278,5 +294,5 @@ combined = [sum(z) for z in zip(normAccelVarsXplusY,normalisedVarAccelWindowedMe
 normVarsXplusNormVarWindowedMeansX = [sum(y) for y in zip(normAccelVarsX,normalisedVarAccelWindowedMeansX)] 
 #print("Accel Varianced X plus Var of windowed Means X: "+str(normVarsXplusNormVarWindowedMeansX) )
 
-normVarXplusnormModeLidar = [sum(u) for u in zip(normAccelVarsX,normalisedModeLidar)]
-print("SENSOR FUSION AccelXVars and LidarModes: "+str(normVarXplusnormModeLidar))
+normVarXplusnormVarLidar = [sum(u) for u in zip(normAccelVarsX,normalisedVarLidar)]
+print("SENSOR FUSION AccelXVars and LidarVars: "+str(normVarXplusnormVarLidar))
