@@ -141,19 +141,19 @@ print("just about to do prediction and prediction map is currently")
 print(predictionMap)
 
 #define some variables that get used in various functions
-global overall60PSIchancesAccel
-overall60psichancesAccel = 0.0
-global overall40PSIchancesAccel
-overall40PSIchancesAccel = 0.0
-global overall20PSIchancesAccel
-overall20PSIchancesAccel = 0.0
+global overall60PSIchances
+overall60PSIchances = 0.0
+global overall40PSIchances
+overall40PSIchances = 0.0
+global overall20PSIchances
+overall20PSIchances = 0.0
 
-global overall60PSIchancesLidar 
-overall60PSIchancesLidar = 0.0
-global overall40PSIchancesLidar 
-overall40PSIchancesLidar = 0.0
-global overall20PSIchancesLidar 
-overall20PSIchancesLidar = 0.0
+#global overall60PSIchancesLidar 
+#overall60PSIchancesLidar = 0.0
+#global overall40PSIchancesLidar 
+#overall40PSIchancesLidar = 0.0
+#global overall20PSIchancesLidar 
+#overall20PSIchancesLidar = 0.0
 
 global meanAccelFfannOutput
 meanAccelFfannOutput = 0.0
@@ -215,34 +215,40 @@ def prediction():
  predictionOfAccelBeing60SuchThatPreviousAccelWas20psi = motion_model_60psi[20.0] * predictionMap[20.0]
  print(predictionOfAccelBeing60SuchThatPreviousAccelWas20psi)
 
- global overall60PSIchancesAccel
- overall60PSIchancesAccel = predictionOfAccelBeing60SuchThatPreviousAccelWas60psi + \
+ global overall60PSIchances
+ overall60PSIchances = predictionOfAccelBeing60SuchThatPreviousAccelWas60psi + \
 predictionOfAccelBeing60SuchThatPreviousAccelWas40psi + \
 predictionOfAccelBeing60SuchThatPreviousAccelWas20psi
 
- print("overall60PSIchancesAccel are")
- print(overall60PSIchancesAccel)
+ print("In prediction... overall60PSIchancesAccel are"+str(overall60PSIchances)+"\n")
 
  predictionOfAccelBeing40SuchThatPreviousAccelWas60psi = motion_model_40psi[60.0]  * predictionMap[60.0]
  predictionOfAccelBeing40SuchThatPreviousAccelWas40psi = motion_model_40psi[40.0] * predictionMap[40.0]
- predictionOfAccelBeing40SuchThatPreviousAccelWas20psi = motion_model_40psi[20] * predictionMap[20.0]
+ predictionOfAccelBeing40SuchThatPreviousAccelWas20psi = motion_model_40psi[20.0] * predictionMap[20.0]
 
- overall40PSIchancesAccel = predictionOfAccelBeing40SuchThatPreviousAccelWas60psi + \
+ global overall40PSIchances
+ overall40PSIchances = predictionOfAccelBeing40SuchThatPreviousAccelWas60psi + \
 predictionOfAccelBeing40SuchThatPreviousAccelWas40psi + \
 predictionOfAccelBeing40SuchThatPreviousAccelWas20psi
+
+ print("In prediction... overall40PSIchancesAccel are"+str(overall40PSIchances)+"\n")
+
 
  predictionOfAccelBeing20SuchThatPreviousAccelWas60psi = motion_model_20psi[60.0]  * predictionMap[60.0]
  predictionOfAccelBeing20SuchThatPreviousAccelWas40psi = motion_model_20psi[40.0] * predictionMap[40.0]
  predictionOfAccelBeing20SuchThatPreviousAccelWas20psi = motion_model_20psi[20.0] * predictionMap[20.0]
-
- overall20PSIchancesAccel = predictionOfAccelBeing20SuchThatPreviousAccelWas60psi + \
+ 
+ global overall20PSIchances
+ overall20PSIchances = predictionOfAccelBeing20SuchThatPreviousAccelWas60psi + \
 predictionOfAccelBeing20SuchThatPreviousAccelWas40psi + \
 predictionOfAccelBeing20SuchThatPreviousAccelWas20psi
 
- predictionMapAccel = dict()
- predictionMapAccel[20.0] = overall20PSIchancesAccel
- predictionMapAccel[40.0] = overall40PSIchancesAccel
- predictionMapAccel[60.0] = overall60PSIchancesAccel
+ print("In prediction... overall20PSIchancesAccel are"+str(overall20PSIchances)+"\n")
+
+ #predictionMapAccel = dict()
+ #predictionMapAccel[20.0] = overall20PSIchancesAccel
+ #predictionMapAccel[40.0] = overall40PSIchancesAccel
+ #predictionMapAccel[60.0] = overall60PSIchancesAccel
 #Values are based on the best FFANN models that were able to be evolved. 
 
 #ACCEL MEASUREMENT-MODEL PROBABILITIES
@@ -306,7 +312,7 @@ def update(currentAccel,currentLidar):
  #For each possible state do (measurement_model * prediction) / 
  # (sumOf measurement_model * prediction)
  # ...to create a pmf with each state having a probability
-
+ print("CURRENTLY IN UPDATE")
  #construct numerators
  numeratorsAccel = dict()
  numeratorsLidar = dict()
@@ -322,38 +328,42 @@ def update(currentAccel,currentLidar):
  global meanLidarFfannOutput 
  meanLidarFfannOutput = ( meanLidarFfannOutput + currentModelValueLidar ) / runningTotalValLidar
  print("mean lidar ffann output is "+str(meanLidarFfannOutput)+"\n")
- global overall60PSIchancesAccel
- numeratorsAccel[60.0] = overall60PSIchancesAccel * measurementModelProbabilityHIGHaccel( meanAccelFfannOutput  )
- print("overall60PSIchancesAccel is "+str(overall60PSIchancesAccel)+"\n")
+ global overall60PSIchances
+ global overall40PSIchances
+ global overall20PSIchances
+
+ numeratorsAccel[60.0] = overall60PSIchances * measurementModelProbabilityHIGHaccel( meanAccelFfannOutput  )
+ print("overall60PSIchances is "+str(overall60PSIchances)+"\n")
  
  #print("AccelmeasurementModel[60psi] for currentAccel value of "+str(currentAccel)+" is:")
  #print(AccelmeasurementModel['60psi'][currentAccel])
- numeratorsAccel[40.0] = overall40PSIchancesAccel * measurementModelProbabilityMEDaccel( meanAccelFfannOutput  )
- numeratorsAccel[20.0] = overall20PSIchancesAccel * measurementModelProbabilityLOWaccel( meanAccelFfannOutput  )
- print("overall40PSIchancesAccel is "+str(overall40PSIchancesAccel)+"\n")
- print("overall20PSIchancesAccel is "+str(overall20PSIchancesAccel)+"\n")
+ numeratorsAccel[40.0] = overall40PSIchances * measurementModelProbabilityMEDaccel( meanAccelFfannOutput  )
+ numeratorsAccel[20.0] = overall20PSIchances * measurementModelProbabilityLOWaccel( meanAccelFfannOutput  )
+ print("overall40PSIchances is "+str(overall40PSIchances)+"\n")
+ print("overall20PSIchances is "+str(overall20PSIchances)+"\n")
  
 
- print("numerator accel 60 for currentAccel mean ffan model output of "+str(meanAccelFfannOutput)+":"+str(numeratorsAccel[60.0])+"\n")
- print("numerator accel 40 for currentAccel mean ffann model output of "+str(meanAccelFfannOutput)+":"+str(numeratorsAccel[40.0])+"\n")
- print("numerator accel 20 for currentAccel mean ffann model output of "+str(meanAccelFfannOutput)+":"+str(numeratorsAccel[20.0])+"\n")
- numeratorsLidar[60.0] = overall60PSIchancesLidar * measurementModelProbabilityHIGHlidar( meanLidarFfannOutput )
- numeratorsLidar[40.0] = overall40PSIchancesLidar * measurementModelProbabilityMEDlidar( meanLidarFfannOutput )
- numeratorsLidar[20.0] = overall20PSIchancesLidar * measurementModelProbabilityLOWlidar( meanLidarFfannOutput )
- print("numerator lidar 60 for current lidar mean ffann output of "+str(meanLidarFfannOutput)+":"+str(numeratorsLidar[60.0]))
- print("numerator lidar 40 for current lidar mean ffann output of "+str(meanLidarFfannOutput)+":"+str(numeratorsLidar[40.0]))
- print("numerator lidar 20 for current lidar mean ffann output of "+str(meanLidarFfannOutput)+":"+str(numeratorsLidar[20.0]))
+ print("numerator accel 60 for currentAccel mean ffan model output of "+str(meanAccelFfannOutput)+" and a modelprobability of "+str(measurementModelProbabilityHIGHaccel( meanAccelFfannOutput ))+" is : "+str(numeratorsAccel[60.0])+"\n")
+ print("numerator accel 40 for currentAccel mean ffann model output of "+str(meanAccelFfannOutput)+" and a modelprobability of "+str(measurementModelProbabilityMEDaccel( meanAccelFfannOutput ))+" is : "+str(numeratorsAccel[40.0])+"\n")
+ print("numerator accel 20 for currentAccel mean ffann model output of "+str(meanAccelFfannOutput)+" and a modelprobability of "+str(measurementModelProbabilityLOWaccel( meanAccelFfannOutput ))+" is : "+str(numeratorsAccel[20.0])+"\n")
+
+ numeratorsLidar[60.0] = overall60PSIchances * measurementModelProbabilityHIGHlidar( meanLidarFfannOutput )
+ numeratorsLidar[40.0] = overall40PSIchances * measurementModelProbabilityMEDlidar( meanLidarFfannOutput )
+ numeratorsLidar[20.0] = overall20PSIchances * measurementModelProbabilityLOWlidar( meanLidarFfannOutput )
+ print("numerator lidar 60 for current lidar mean ffann output of "+str(meanLidarFfannOutput)+" and a modelprobability of "+str(measurementModelProbabilityHIGHlidar( meanLidarFfannOutput ))+" is : "+str(numeratorsLidar[60.0]))
+ print("numerator lidar 40 for current lidar mean ffann output of "+str(meanLidarFfannOutput)+" and a modelprobability of "+str(measurementModelProbabilityMEDlidar( meanLidarFfannOutput ))+" is: "+str(numeratorsLidar[40.0]))
+ print("numerator lidar 20 for current lidar mean ffann output of "+str(meanLidarFfannOutput)+" and a modelprobabilty of "+str(measurementModelProbabilityLOWlidar( meanLidarFfannOutput ))+" is: "+str(numeratorsLidar[20.0]))
 # Now for denominators, the probability of getting this read sensor data value
  denominatorsAccel = dict()
  denominatorsLidar = dict()
 
- denominatorsAccel[60.0] = overall60PSIchancesAccel * measurementModelProbabilityHIGHaccel( meanAccelFfannOutput  )
- denominatorsAccel[40.0] = overall40PSIchancesAccel * measurementModelProbabilityMEDaccel( meanAccelFfannOutput  )
- denominatorsAccel[20.0] = overall20PSIchancesAccel * measurementModelProbabilityLOWaccel( meanAccelFfannOutput  )
+ denominatorsAccel[60.0] = overall60PSIchances * measurementModelProbabilityHIGHaccel( meanAccelFfannOutput  )
+ denominatorsAccel[40.0] = overall40PSIchances * measurementModelProbabilityMEDaccel( meanAccelFfannOutput  )
+ denominatorsAccel[20.0] = overall20PSIchances * measurementModelProbabilityLOWaccel( meanAccelFfannOutput  )
 
- denominatorsLidar[60.0] = overall60PSIchancesLidar * measurementModelProbabilityHIGHlidar( meanLidarFfannOutput )
- denominatorsLidar[40.0] = overall40PSIchancesLidar * measurementModelProbabilityMEDlidar( meanLidarFfannOutput )
- denominatorsLidar[20.0] = overall20PSIchancesLidar * measurementModelProbabilityLOWlidar( meanLidarFfannOutput )
+ denominatorsLidar[60.0] = overall60PSIchances * measurementModelProbabilityHIGHlidar( meanLidarFfannOutput )
+ denominatorsLidar[40.0] = overall40PSIchances * measurementModelProbabilityMEDlidar( meanLidarFfannOutput )
+ denominatorsLidar[20.0] = overall20PSIchances * measurementModelProbabilityLOWlidar( meanLidarFfannOutput )
 
  denominatorAccel = denominatorsAccel[60.0] + denominatorsAccel[40.0] + denominatorsAccel[20.0]
 
@@ -391,10 +401,10 @@ FIRlist = []
 last10Lidarvar = []
 varmode = 0.0
 stats = []
-debugCounter = 0
+#debugCounter = 0
 for line in Lines:
- while debugCounter < 10:
-  debugCounter += 1
+ #while debugCounter < 10:
+  #debugCounter += 1
   separated = line.split(',')
   valAccel = float(separated[0])
   sepLidar = LinesLidar[linecount].split(',')
