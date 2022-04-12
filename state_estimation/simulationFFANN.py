@@ -45,8 +45,12 @@ ammInputLayer = Node()
 ammInputLayer.weight = 1.0061789956545186
 ammInputLayer.bias = 0.018344856493117234
 ammHiddenLayer = []
-weights = [1.3008844685982437,0.82557979157225,0.5971036921598851,1.6221239464256758,1.658719232929949,1.95881299520407,1.2163583748773723,1.4936133155439555,0.21143498938076677,1.9232676153303996,0.4451278281419764]
-biases = [0.8671751913958576,1.3255037187755965,0.12085837431132629,0.1872091100792339,0.810033632607061,0.36038850435203984,1.1141950114108992,0.3051406290308978,0.11362218161265836,0.5142996798131558,0.0886190798847386]
+weights = [1.3008844685982437,0.82557979157225,0.5971036921598851,\
+1.6221239464256758,1.658719232929949,1.95881299520407,1.2163583748773723,\
+1.4936133155439555,0.21143498938076677,1.9232676153303996,0.4451278281419764]
+biases = [0.8671751913958576,1.3255037187755965,0.12085837431132629,\
+0.1872091100792339,0.810033632607061,0.36038850435203984,1.1141950114108992,\
+0.3051406290308978,0.11362218161265836,0.5142996798131558,0.0886190798847386]
 for x in range(11):
   ammHiddenLayer.append(Node())
   ammHiddenLayer[x].weight = weights[x]
@@ -58,7 +62,7 @@ ammOutputLayer.weights.append(0.14134250243199997)
 ammOutputLayer.weights.append(0.16313547427365904)
 ammOutputLayer.weights.append(0.2695829597148024)
 ammOutputLayer.weights.append(0.21772441106714058)
-ammOutputLayer.weights.append(0.25515613773330414)
+ammOutputLayer.weights.append(0.255015613773330414)
 ammOutputLayer.weights.append(0.3622444874966593)
 ammOutputLayer.weights.append(0.21772441106714058)
 ammOutputLayer.weights.append(0.21772441106714058)
@@ -73,8 +77,12 @@ lmmHiddenLayer = []
 lmmOutputLayer = Node()
 lmmInputLayer.weight = 0.08224812054442121
 lmmInputLayer.bias = 0.04018407937509605
-lweights = [1.9737394536757076,0.7210050115250795,1.8685856098840263,0.39364612992216874,1.8502180550015328,1.3465875798820213,0.3252433274564308,1.0835973471554226,0.8672000544275791,1.1332818007556449]
-lbiases = [0.04041375726005958,0.19073090274237336,0.4629375430821314,0.5092694520336518,1.1867358663941552,0.6356753902614478,0.2648251327278308,0.4334917117498638,0.5268589968431212,0.038248342941496816]
+lweights = [1.9737394536757076,0.7210050115250795,1.8685856098840263,\
+0.39364612992216874,1.8502180550015328,1.3465875798820213,\
+0.3252433274564308,1.0835973471554226,0.8672000544275791,1.1332818007556449]
+lbiases = [0.04041375726005958,0.19073090274237336,0.4629375430821314,\
+0.5092694520336518,1.1867358663941552,0.6356753902614478,\
+0.2648251327278308,0.4334917117498638,0.5268589968431212,0.038248342941496816]
 
 for x in range(10):
   lmmHiddenLayer.append(Node())
@@ -178,6 +186,7 @@ def accelProcessCurrentAccel(currentDataValue):
     x.output = x.weight * AccelmeasurementModel.inputLayer.output
     x.output += x.bias
     x.output = relu(x.output)
+
   #Process output layer
   for x in range(len(AccelmeasurementModel.hiddenLayer)):
     AccelmeasurementModel.outputLayer.output += AccelmeasurementModel.hiddenLayer[x].output * AccelmeasurementModel.outputLayer.weights[x]
@@ -318,30 +327,35 @@ def update(currentAccel,currentLidar):
  numeratorsLidar = dict()
  currentModelValueAccel = accelProcessCurrentAccel(currentAccel)
  currentModelValueLidar = lidarProcessCurrentLidar(currentLidar)
+
+ print("Current model value accel is "+str(currentModelValueAccel)+"\n")
+ print("Current model value lidar is "+str(currentModelValueLidar)+"\n")
+
  global runningTotalValAccel
  runningTotalValAccel += 1.0
  global runningTotalValLidar
  runningTotalValLidar += 1.0
  global meanAccelFfannOutput
+ print("Running count is "+str(runningTotalValAccel)+" and the running sum is "+str(meanAccelFfannOutput)+"\n")
+
  meanAccelFfannOutput = ( meanAccelFfannOutput + currentModelValueAccel ) / runningTotalValAccel
- print("mean accel ffann output is "+str(meanAccelFfannOutput)+"\n")
+ print("Running avg accel ffann output is "+str(meanAccelFfannOutput)+"\n")
  global meanLidarFfannOutput 
  meanLidarFfannOutput = ( meanLidarFfannOutput + currentModelValueLidar ) / runningTotalValLidar
- print("mean lidar ffann output is "+str(meanLidarFfannOutput)+"\n")
+ print("Running avg lidar ffann output is "+str(meanLidarFfannOutput)+"\n")
  global overall60PSIchances
  global overall40PSIchances
  global overall20PSIchances
 
  numeratorsAccel[60.0] = overall60PSIchances * measurementModelProbabilityHIGHaccel( meanAccelFfannOutput  )
  print("overall60PSIchances is "+str(overall60PSIchances)+"\n")
- 
+
  #print("AccelmeasurementModel[60psi] for currentAccel value of "+str(currentAccel)+" is:")
  #print(AccelmeasurementModel['60psi'][currentAccel])
  numeratorsAccel[40.0] = overall40PSIchances * measurementModelProbabilityMEDaccel( meanAccelFfannOutput  )
  numeratorsAccel[20.0] = overall20PSIchances * measurementModelProbabilityLOWaccel( meanAccelFfannOutput  )
  print("overall40PSIchances is "+str(overall40PSIchances)+"\n")
  print("overall20PSIchances is "+str(overall20PSIchances)+"\n")
- 
 
  print("numerator accel 60 for currentAccel mean ffan model output of "+str(meanAccelFfannOutput)+" and a modelprobability of "+str(measurementModelProbabilityHIGHaccel( meanAccelFfannOutput ))+" is : "+str(numeratorsAccel[60.0])+"\n")
  print("numerator accel 40 for currentAccel mean ffann model output of "+str(meanAccelFfannOutput)+" and a modelprobability of "+str(measurementModelProbabilityMEDaccel( meanAccelFfannOutput ))+" is : "+str(numeratorsAccel[40.0])+"\n")
