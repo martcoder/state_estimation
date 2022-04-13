@@ -17,6 +17,11 @@ hiddenMin = 5
 global weightMax
 weightMax = 2.0
 
+global justLidar
+justLidar = False
+global justAccel
+justAccel = False
+
 #NB run using python3 simulation.py acceldatafilename lidardatafilename
 # e.g. python3 simulation.py Accel45psi.data Lidar45psi.data
 
@@ -317,11 +322,11 @@ def measurementModelProbabilityLOWaccel(value):
 #based on the best measurement model FFANN that was able to be evolved. 
 def measurementModelProbabilityHIGHlidar(value):
   if value < 8000000.0:
-    return 0.05
+    return 0.7
   if value > 8000000 and value < 8250000.0:
     return 0.25
   if value > 8250000.0: 
-    return 0.7
+    return 0.05
 
 def measurementModelProbabilityMEDlidar(value):
   if value < 8000000.0:
@@ -333,11 +338,11 @@ def measurementModelProbabilityMEDlidar(value):
 
 def measurementModelProbabilityLOWlidar(value):
   if value < 8000000.0:
-    return 0.7
+    return 0.05
   if value > 8000000.0 and value < 8250000.0:
     return 0.25
   if value > 8250000: 
-    return 0.05
+    return 0.7
 
 global runningTotalCount
 runningTotalCount = 0.0
@@ -429,18 +434,48 @@ def update(currentAccel,currentLidar):
    denominatorAccel = 0.000001
  if denominatorLidar == 0:
    denominatorLidar = 0.000001
- predictionMap[20.0] = (numeratorsAccel[20.0] / denominatorAccel) + (numeratorsLidar[20.0] / denominatorLidar)
- predictionMap[40.0] = (numeratorsAccel[40.0] / denominatorAccel) + (numeratorsLidar[40.0] / denominatorLidar)
- predictionMap[60.0] = (numeratorsAccel[60.0] / denominatorAccel) + (numeratorsLidar[60.0] / denominatorLidar)
 
+ global justLidar
+ global justAccel
+ if justLidar:
+   predictionMap[20.0] = (numeratorsLidar[20.0] / denominatorLidar)
+   predictionMap[40.0] = (numeratorsLidar[40.0] / denominatorLidar)
+   predictionMap[60.0] = (numeratorsLidar[60.0] / denominatorLidar)
+ elif justAccel:
+   predictionMap[20.0] = (numeratorsAccel[20.0] / denominatorAccel)
+   predictionMap[40.0] = (numeratorsAccel[40.0] / denominatorAccel)
+   predictionMap[60.0] = (numeratorsAccel[60.0] / denominatorAccel)
+ else: #Do sensor fusion!!!!!! 
+   predictionMap[20.0] = (numeratorsAccel[20.0] / denominatorAccel) + (numeratorsLidar[20.0] / denominatorLidar)
+   predictionMap[40.0] = (numeratorsAccel[40.0] / denominatorAccel) + (numeratorsLidar[40.0] / denominatorLidar)
+   predictionMap[60.0] = (numeratorsAccel[60.0] / denominatorAccel) + (numeratorsLidar[60.0] / denominatorLidar)
+
+
+
+#THE SCRIPT OPERATES FROM HERE:
 #2nd step is preprocessing incoming data e.g. filter, get variance, fit into bucket
 #currentAccel = next line of data
 #currentLidar = next line of data
+
+print("Please enter whether you want to operate with just Lidar? Y or N > ")
+useJustLidar = input()
+if(useJustLidar == "Y"):
+  justLidar = True #
+else:
+  justLidar = False
+  print("Please enter whether you want to operate with just Accel? Y or N > ")
+  useJustAccel = input()
+  if(useJustAccel):
+    justAccel = True
+  else:
+    justAccel = False
 
 print("just about to open a data file")
 
 acceldataname = sys.argv[1]
 lidardataname = sys.argv[2]
+
+
 datafile = open(acceldataname,"r") #open("Accel15psi.data","r")
 datafileLidar = open(lidardataname,"r")  #open("Lidar15psi.data","r")
 Lines = datafile.readlines() 
