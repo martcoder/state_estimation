@@ -93,6 +93,20 @@ lweights.append(1.1457428659323026)
 lweights.append(1.9737394536757076)
 
 lbiases = []
+lbiases.append(0.040413757266005958)
+lbiases.append(0.19073090274237336)
+lbiases.append(0.4629375430821314)
+lbiases.append(0.5092694520336518)
+lbiases.append(1.1867358663941552)
+lbiases.append(0.04041375726005958)
+lbiases.append(0.04041375726005958)
+lbiases.append(0.04041375726005958)
+lbiases.append(0.19073090274237336)
+lbiases.append(0.4629375430821314)
+lbiases.append(0.5092694520336518)
+lbiases.append(1.1867358663941552)
+lbiases.append(0.026007775587584492)
+lbiases.append(0.04041375726005958)
 
 for x in range(10):
   lmmHiddenLayer.append(Node())
@@ -276,53 +290,53 @@ predictionOfAccelBeing20SuchThatPreviousAccelWas20psi
 
 #ACCEL MEASUREMENT-MODEL PROBABILITIES
 def measurementModelProbabilityHIGHaccel(value):
-  if value < 250000.0:
+  if value < 5200000.0:
     return 0.05
-  if value > 250000.0 and value < 480000.0:
+  if value > 5200000.0 and value < 5400000.0:
     return 0.25
-  if value > 480000.0: 
+  if value > 5400000.0: 
     return 0.7
 
 def measurementModelProbabilityMEDaccel(value):
-  if value < 250000.0:
+  if value < 5200000.0:
     return 0.2
-  if value > 250000.0 and value < 480000.0:
+  if value > 5200000 and value < 5400000.0:
     return 0.6
-  if value > 480000.0: 
+  if value > 5400000: 
     return 0.2
 
 def measurementModelProbabilityLOWaccel(value):
-  if value < 250000.0:
+  if value < 5200000:
     return 0.7
-  if value > 250000.0 and value < 480000.0:
+  if value > 5200000 and value < 5400000.0:
     return 0.25
-  if value > 480000.0: 
+  if value > 5400000: 
     return 0.05
 
 #LIDAR MEASUREMENT-MODEL PROBABILITIES
 #based on the best measurement model FFANN that was able to be evolved. 
 def measurementModelProbabilityHIGHlidar(value):
-  if value < 250000.0:
+  if value < 8000000.0:
     return 0.05
-  if value > 250000.0 and value < 480000.0:
+  if value > 8000000 and value < 8250000.0:
     return 0.25
-  if value > 480000.0: 
+  if value > 8250000.0: 
     return 0.7
 
 def measurementModelProbabilityMEDlidar(value):
-  if value < 250000.0:
+  if value < 8000000.0:
     return 0.2
-  if value > 250000.0 and value < 480000.0:
+  if value > 8000000.0 and value < 8250000.0:
     return 0.6
-  if value > 480000.0: 
+  if value > 8250000.0: 
     return 0.2
 
 def measurementModelProbabilityLOWlidar(value):
-  if value < 250000.0:
+  if value < 8000000.0:
     return 0.7
-  if value > 250000.0 and value < 480000.0:
+  if value > 8000000.0 and value < 8250000.0:
     return 0.25
-  if value > 480000.0: 
+  if value > 8250000: 
     return 0.05
 
 global runningTotalCount
