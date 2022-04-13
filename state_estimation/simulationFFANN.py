@@ -17,7 +17,6 @@ hiddenMin = 5
 global weightMax
 weightMax = 2.0
 
-
 #NB run using python3 simulation.py acceldatafilename lidardatafilename
 # e.g. python3 simulation.py Accel45psi.data Lidar45psi.data
 
@@ -75,14 +74,25 @@ AccelmeasurementModel = Individual( ammInputLayer, ammHiddenLayer, ammOutputLaye
 lmmInputLayer = Node()
 lmmHiddenLayer = []
 lmmOutputLayer = Node()
-lmmInputLayer.weight = 0.08224812054442121
-lmmInputLayer.bias = 0.04018407937509605
-lweights = [1.9737394536757076,0.7210050115250795,1.8685856098840263,\
-0.39364612992216874,1.8502180550015328,1.3465875798820213,\
-0.3252433274564308,1.0835973471554226,0.8672000544275791,1.1332818007556449]
-lbiases = [0.04041375726005958,0.19073090274237336,0.4629375430821314,\
-0.5092694520336518,1.1867358663941552,0.6356753902614478,\
-0.2648251327278308,0.4334917117498638,0.5268589968431212,0.038248342941496816]
+lmmInputLayer.weight = 0.9262540838770146
+lmmInputLayer.bias = 0.010212594599706026 #0.04018407937509605
+lweights = []
+lweights.append(1.9737394536757076)
+lweights.append(0.7210050115250795)
+lweights.append(1.8685856098840263)
+lweights.append(0.39364612992216874)
+lweights.append(1.8502180550015328)
+lweights.append(1.9737394536757076)
+lweights.append(1.9737394536757076)
+lweights.append(1.9737394536757076)
+lweights.append(0.7210050115250795)
+lweights.append(1.8685856098840263)
+lweights.append(0.39364612992216874)
+lweights.append(1.8502180550015328)
+lweights.append(1.1457428659323026)
+lweights.append(1.9737394536757076)
+
+lbiases = []
 
 for x in range(10):
   lmmHiddenLayer.append(Node())
@@ -92,15 +102,19 @@ lmmOutputLayer.weights = []
 lmmOutputLayer.weights.append(0.17560603783383788)
 lmmOutputLayer.weights.append(0.5264303902852817)
 lmmOutputLayer.weights.append(0.5366098343584506)
-lmmOutputLayer.weights.append(0.23918987150191062)
+lmmOutputLayer.weights.append(0.2391898715091062)
 lmmOutputLayer.weights.append(0.3126473384541354)
-lmmOutputLayer.weights.append(0.003459201197839934)
-lmmOutputLayer.weights.append(0.14439303367309586)
-lmmOutputLayer.weights.append(0.009788464721693035)
-lmmOutputLayer.weights.append(0.4071702704045368)
-lmmOutputLayer.weights.append(0.473037859231782)
+lmmOutputLayer.weights.append(0.17560603783383788)
+lmmOutputLayer.weights.append(0.17560603783383788)
+lmmOutputLayer.weights.append(1.4609781643403315)
+lmmOutputLayer.weights.append(0.5264303902852817)
+lmmOutputLayer.weights.append(0.048015829318969194)
+lmmOutputLayer.weights.append(0.23918987150191062)
+lmmOutputLayer.weights.append(0.12269093738804715)
+lmmOutputLayer.weights.append(0.17560603783383788)
+lmmOutputLayer.weights.append(0.17560603783383788)
 
-lmmOutputLayer.bias = 0.34915196870822807
+lmmOutputLayer.bias = 0.03233947380481528 #0.34915196870822807
 LidarmeasurementModel = Individual( lmmInputLayer, lmmHiddenLayer, lmmOutputLayer )
 
 #Now for the motion models
@@ -266,7 +280,7 @@ def measurementModelProbabilityHIGHaccel(value):
     return 0.05
   if value > 250000.0 and value < 480000.0:
     return 0.25
-  if value > 500000.0: 
+  if value > 480000.0: 
     return 0.7
 
 def measurementModelProbabilityMEDaccel(value):
@@ -311,11 +325,13 @@ def measurementModelProbabilityLOWlidar(value):
   if value > 480000.0: 
     return 0.05
 
-global runningTotalNum
-global runningTotalValAccel
-runningTotalValAccel = 0.0
-global runningTotalValLidar
-runningTotalValLidar = 0.0
+global runningTotalCount
+runningTotalCount = 0.0
+global runningTotalSumAccel
+runningTotalSumAccel = 0.0
+global runningTotalSumLidar
+runningTotalSumLidar = 0.0
+
 
 def update(currentAccel,currentLidar):
  #For each possible state do (measurement_model * prediction) / 
@@ -331,22 +347,32 @@ def update(currentAccel,currentLidar):
  print("Current model value accel is "+str(currentModelValueAccel)+"\n")
  print("Current model value lidar is "+str(currentModelValueLidar)+"\n")
 
- global runningTotalValAccel
- runningTotalValAccel += 1.0
- global runningTotalValLidar
- runningTotalValLidar += 1.0
- global meanAccelFfannOutput
- print("Running count is "+str(runningTotalValAccel)+" and the running sum is "+str(meanAccelFfannOutput)+"\n")
+ #global runningTotalSumAccel
+ #runningTotalAccel = 0.0
+ 
+ global runningTotalCount
+ runningTotalCount += 1.0 # increment count by 1 for each FFANN output value added to the sum
+ 
+ #print("Accel Running count is "+str(runningTotalValAccel)+" and the running sum is "+str()+"\n")
 
- meanAccelFfannOutput = ( meanAccelFfannOutput + currentModelValueAccel ) / runningTotalValAccel
- print("Running avg accel ffann output is "+str(meanAccelFfannOutput)+"\n")
- global meanLidarFfannOutput 
- meanLidarFfannOutput = ( meanLidarFfannOutput + currentModelValueLidar ) / runningTotalValLidar
+ global runningTotalSumAccel
+ print("Accel equation parts are: currentSum: "+str(runningTotalSumAccel)+", current accel model outut: "+str(currentModelValueAccel)+", and running count is: "+str(runningTotalCount))
+ runningTotalSumAccel = runningTotalSumAccel + currentModelValueAccel
+ print("Accel running total sum plus current output gives new running sum of "+str(runningTotalSumAccel) )
+ global meanAccelFfannOutput
+ meanAccelFfannOutput =  runningTotalSumAccel  / runningTotalCount
+ print("Running avg accel ffann output is now "+str(meanAccelFfannOutput)+"\n")
+ global meanLidarFfannOutput
+ #Get now running total sum for Lidar
+ global runningTotalSumLidar
+ runningTotalSumLidar = runningTotalSumLidar + currentModelValueLidar 
+ meanLidarFfannOutput = runningTotalSumLidar / runningTotalCount
  print("Running avg lidar ffann output is "+str(meanLidarFfannOutput)+"\n")
  global overall60PSIchances
  global overall40PSIchances
  global overall20PSIchances
 
+ print("measurement model prob high accel for meanAccelFfannOutput of "+str(meanAccelFfannOutput)+" is "+str(measurementModelProbabilityHIGHaccel( meanAccelFfannOutput  )))
  numeratorsAccel[60.0] = overall60PSIchances * measurementModelProbabilityHIGHaccel( meanAccelFfannOutput  )
  print("overall60PSIchances is "+str(overall60PSIchances)+"\n")
 
