@@ -67,19 +67,19 @@ for i in range(len(logfileNames)):
 lfnIndex = 0 # index for which log file we will write to next
 dataList = [] #for storing data values
 predictionDataList = [] #for storing prediction data values
-MAX_VOLUME_OF_DATA_PER_FILE = 20 #quite fast like 2 logfiles per minute
+MAX_VOLUME_OF_DATA_PER_FILE = 15 #quite fast like 2 logfiles per minute
 
 #======WRITE DATA TO CIRCULAR LOG FILES==============
 def writeDataToFile(filename):
     f = open( filename,"w" )
     f.writelines( dataList )
-    f.close #automatically flushes too
+    f.close() #automatically flushes too
     return True
 
 def writePredictionToFile(filename):
     f = open( filename,"w" )
     f.writelines( predictionDataList )
-    f.close #automatically flushes too
+    f.close() #automatically flushes too
     return True
 
 #======GET I2C  BUS==============
@@ -132,7 +132,12 @@ def read_data():
  # Read data back from 0x00(0), 7 bytes
  # Status register, X-Axis MSB, X-Axis LSB, Y-Axis MSB, Y-Axis LSB, Z-Axis MSB, Z-Axis LSB
  # changed 1C to 1D after reading datasheet and running i2cdetect -y 1
- data = bus.read_i2c_block_data(0x1D, 0x00, 7) 
+ try:
+   data = bus.read_i2c_block_data(0x1D, 0x00, 7) 
+ except OSError:
+   errorF = open( errorFile,"a")
+   errorF.write("Error reading i2c data at "+str(datetime.now().time())+'\n')
+   errorF.close()
 
  # Convert the data
  xAccl = (data[1] * 256 + data[2]) / 16
@@ -401,20 +406,20 @@ def prediction():
  global motion_model_20psi
  global predictionMap #Ensure the existing value can be accessed....
  predictionOfAccelBeing60SuchThatPreviousAccelWas60psi = motion_model_60psi[60.0]  * predictionMap[60.0]
- print("motion model is "+str(motion_model_60psi[60])+" and predictionMap[60] is "+str(predictionMap[60.0]))
+ #print("motion model is "+str(motion_model_60psi[60])+" and predictionMap[60] is "+str(predictionMap[60.0]))
 
- print(predictionOfAccelBeing60SuchThatPreviousAccelWas60psi)
+ #print(predictionOfAccelBeing60SuchThatPreviousAccelWas60psi)
  predictionOfAccelBeing60SuchThatPreviousAccelWas40psi =  motion_model_60psi[40.0] * predictionMap[40.0]
- print(predictionOfAccelBeing60SuchThatPreviousAccelWas40psi)
+ #print(predictionOfAccelBeing60SuchThatPreviousAccelWas40psi)
  predictionOfAccelBeing60SuchThatPreviousAccelWas20psi = motion_model_60psi[20.0] * predictionMap[20.0]
- print(predictionOfAccelBeing60SuchThatPreviousAccelWas20psi)
+ #print(predictionOfAccelBeing60SuchThatPreviousAccelWas20psi)
 
  global overall60PSIchances
  overall60PSIchances = predictionOfAccelBeing60SuchThatPreviousAccelWas60psi + \
 predictionOfAccelBeing60SuchThatPreviousAccelWas40psi + \
 predictionOfAccelBeing60SuchThatPreviousAccelWas20psi
 
- print("In prediction... overall60PSIchancesAccel are"+str(overall60PSIchances)+"\n")
+ #print("In prediction... overall60PSIchancesAccel are"+str(overall60PSIchances)+"\n")
 
  predictionOfAccelBeing40SuchThatPreviousAccelWas60psi = motion_model_40psi[60.0]  * predictionMap[60.0]
  predictionOfAccelBeing40SuchThatPreviousAccelWas40psi = motion_model_40psi[40.0] * predictionMap[40.0]
@@ -425,7 +430,7 @@ predictionOfAccelBeing60SuchThatPreviousAccelWas20psi
 predictionOfAccelBeing40SuchThatPreviousAccelWas40psi + \
 predictionOfAccelBeing40SuchThatPreviousAccelWas20psi
 
- print("In prediction... overall40PSIchancesAccel are"+str(overall40PSIchances)+"\n")
+ #print("In prediction... overall40PSIchancesAccel are"+str(overall40PSIchances)+"\n")
 
 
  predictionOfAccelBeing20SuchThatPreviousAccelWas60psi = motion_model_20psi[60.0]  * predictionMap[60.0]
@@ -437,7 +442,7 @@ predictionOfAccelBeing40SuchThatPreviousAccelWas20psi
 predictionOfAccelBeing20SuchThatPreviousAccelWas40psi + \
 predictionOfAccelBeing20SuchThatPreviousAccelWas20psi
 
- print("In prediction... overall20PSIchancesAccel are"+str(overall20PSIchances)+"\n")
+ #print("In prediction... overall20PSIchancesAccel are"+str(overall20PSIchances)+"\n")
  #END OF PREDICTION FUNCTION
 
 def update(currentAccel): #,currentLidar):
@@ -550,10 +555,11 @@ if __name__ == "__main__":
         prevZ = 0
         while True:
             #currentx,currenty,currentz = (500,500,500)
-            
+
             # Loop until max volume of data has been gathered
             while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
                currentx,currenty,currentz = read_data() # read next sensor value
+               print("current accel x read data val is "+str(currentx))
                #currentx = currentx+1
                #currenty = currenty + 1
                #currentz = currentz + 1
@@ -567,9 +573,9 @@ if __name__ == "__main__":
                normalisedMap = dict(predictionMap)
                #Find the max value...
                maxToFind = 0.0
-               for x in predictionMap.items():
-                 if x[1] > maxToFind:
-                   maxToFind = x[1]
+               for itm in predictionMap.items():
+                 if itm[1] > maxToFind:
+                   maxToFind = itm[1]
                #ensure maxToFind is a value if zero
                #if maxToFind == 0.0: 
                # max = 0.000001
@@ -585,11 +591,13 @@ if __name__ == "__main__":
                    prevX = currentx
                    prevY = currenty
                    prevZ = currentz
+                   print("current accel read value is "+str(currentx))
                    dataList.append( str(currentx)+","+str(currenty)+","+str(currentz)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
                    print("data read is x: "+str(currentx)+", y: "+str(currenty)+", z: "+str(currentz)+'\n'" and list length is "+str(len(dataList)))
 
                predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+"\n"  )
-
+            #print("data collected is \n")
+            #print(dataList)
             # Write data to current log file
             complete = writeDataToFile( logfileConcatNames[lfnIndex] )
             predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )
