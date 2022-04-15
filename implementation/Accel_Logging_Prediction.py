@@ -67,15 +67,20 @@ for i in range(len(logfileNames)):
 lfnIndex = 0 # index for which log file we will write to next
 dataList = [] #for storing data values
 predictionDataList = [] #for storing prediction data values
-MAX_VOLUME_OF_DATA_PER_FILE = 2500 #quite fast like 2 logfiles per minute
+MAX_VOLUME_OF_DATA_PER_FILE = 20 #quite fast like 2 logfiles per minute
 
 #======WRITE DATA TO CIRCULAR LOG FILES==============
-def writeDataToFile(filename, datalist):
+def writeDataToFile(filename):
     f = open( filename,"w" )
     f.writelines( dataList )
     f.close #automatically flushes too
     return True
 
+def writePredictionToFile(filename):
+    f = open( filename,"w" )
+    f.writelines( predictionDataList )
+    f.close #automatically flushes too
+    return True
 
 #======GET I2C  BUS==============
 bus = smbus.SMBus(1)
@@ -538,16 +543,22 @@ def update(currentAccel): #,currentLidar):
 
 if __name__ == "__main__":
     try:
-        initialise_configure_sensor()
+        #initialise_configure_sensor()
         time.sleep(0.5)
         prevX = 0
         prevY = 0
         prevZ = 0
         while True:
+            #currentx,currenty,currentz = (500,500,500)
+            
             # Loop until max volume of data has been gathered
             while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
-               x,y,z = read_data() # read next sensor value
-               predict()
+               currentx,currenty,currentz = read_data() # read next sensor value
+               #currentx = currentx+1
+               #currenty = currenty + 1
+               #currentz = currentz + 1
+               prediction()
+               currentAccel = currentx
                update(currentAccel)
                #print("Predictionmap is currently")
                #print(predictionMap)
@@ -570,18 +581,18 @@ if __name__ == "__main__":
                #print(predictionMap)
 
                # Check values are populated, and check they are not same as previous value (even at rest they change a little)
-               if( (x != None or y != None or z != None) and ( (x != prevX) and (y != prevY) and (z != prevZ) )  ):
-                   prevX = x
-                   prevY = y
-                   prevZ = z
-                   dataList.append( str(x)+","+str(y)+","+str(z)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
-                   print("data read is x: "+str(x)+", y: "+str(y)+", z: "+str(z)+'\n'" and list length is "+str(len(dataList)))
+               if( (currentx != None or currenty != None or currentz != None) and ( (currentx != prevX) and (currenty != prevY) and (currentz != prevZ) )  ):
+                   prevX = currentx
+                   prevY = currenty
+                   prevZ = currentz
+                   dataList.append( str(currentx)+","+str(currenty)+","+str(currentz)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
+                   print("data read is x: "+str(currentx)+", y: "+str(currenty)+", z: "+str(currentz)+'\n'" and list length is "+str(len(dataList)))
 
                predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+"\n"  )
 
             # Write data to current log file
-            complete = writeDataToFile( logfileConcatNames[lfnIndex], dataList )
-            predictionsWritten = writeDataToFile( logfileConcatPredictions[lfnIndex], predictionDataList)
+            complete = writeDataToFile( logfileConcatNames[lfnIndex] )
+            predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )
             if complete: # once file is written
                 dataList[:] = [] #empty current values
             if predictionsWritten: #once predictions have been written to file
