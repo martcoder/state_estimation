@@ -14,6 +14,38 @@ import sys
 import copy
 import random
 
+#define some variables that get used in various functions
+global hiddenMax
+hiddenMax = 20
+global hiddenMin
+hiddenMin = 5
+global weightMax
+weightMax = 2.0
+
+global overall60PSIchances
+overall60PSIchances = 0.0
+global overall40PSIchances
+overall40PSIchances = 0.0
+global overall20PSIchances
+overall20PSIchances = 0.0
+global meanAccelFfannOutput
+meanAccelFfannOutput = 0.0
+
+global meanLidarFfannOutput
+meanLidarFfannOutput = 0.0
+
+global predictionMapAccel 
+predictionMapAccel = dict()
+
+global runningTotalCount
+runningTotalCount = 0.0
+global runningTotalSumAccel
+runningTotalSumAccel = 0.0
+global runningTotalSumLidar
+runningTotalSumLidar = 0.0
+
+
+
 #folder creation from: https://gist.github.com/keithweaver/562d3caa8650eefe7f84fa074e9ca949
 #==========SETUP LOGGING===============
 errorFile = "/home/pi/state_estimation/implementation/errors.log"
@@ -26,9 +58,9 @@ except OSError:
     errorF = open( errorFile,"a")
     errorF.write("Error creating logging folder at "+str(datetime.now().time())+'\n')
 logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data","log11.data","log12.data","log13.data","log14.data","log15.data","log16.data","log17.data","log18.data","log19.data","log20.data","log21.data","log22.data","log23.data","log24.data","log25.data","log26.data","log27.data","log28.data","log29.data","log30.data","log31.data","log32.data","log33.data","log34.data","log35.data","log36.data","log37.data","log38.data","log39.data","log40.data"] # circular log
-logfileConcatNames = ["prdct1.data","prdct2.data","prdct3.data","prdct4.data","prdct5.data","prdct6.data","prdct7.data","prdct8.data","prdct9.data","prdct10.data","prdct11.data","prdct12.data","prdct13.data","prdct14.data","prdct15.data","prdct16.data","prdct17.data","prdct18.data","prdct19.data","prdct20.data","prdct21.data","prdct22.data","prdct23.data","prdct24.data","prdct25.data","prdct26.data","prdct27.data","prdct28.data","prdct29.data","prdct30.data","prdct31.data","prdct32.data","prdct33.data","prdct34.data","prdct35.data","prdct36.data","prdct37.data","prdct38.data","prdct39.data","prdct40.data"]
-predictionFileNames = ["",]
+predictionFileNames = ["prdct1.data","prdct2.data","prdct3.data","prdct4.data","prdct5.data","prdct6.data","prdct7.data","prdct8.data","prdct9.data","prdct10.data","prdct11.data","prdct12.data","prdct13.data","prdct14.data","prdct15.data","prdct16.data","prdct17.data","prdct18.data","prdct19.data","prdct20.data","prdct21.data","prdct22.data","prdct23.data","prdct24.data","prdct25.data","prdct26.data","prdct27.data","prdct28.data","prdct29.data","prdct30.data","prdct31.data","prdct32.data","prdct33.data","prdct34.data","prdct35.data","prdct36.data","prdct37.data","prdct38.data","prdct39.data","prdct40.data"]
 logfileConcatPredictions = []
+logfileConcatNames = []
 for i in range(len(logfileNames)):
   logfileConcatNames.append( logfileRoot+logfileNames[i] )
   logfileConcatPredictions.append( logfileRoot+predictionFileNames[i]  )
@@ -259,29 +291,6 @@ predictionMap[20.0] = 0.333
 predictionMap[40.0] = 0.333
 predictionMap[60.0] = 0.333
 
-#define some variables that get used in various functions
-global overall60PSIchances
-overall60PSIchances = 0.0
-global overall40PSIchances
-overall40PSIchances = 0.0
-global overall20PSIchances
-overall20PSIchances = 0.0
-global meanAccelFfannOutput
-meanAccelFfannOutput = 0.0
-
-global meanLidarFfannOutput
-meanLidarFfannOutput = 0.0
-
-global predictionMapAccel 
-predictionMapAccel = dict()
-
-global runningTotalCount
-runningTotalCount = 0.0
-global runningTotalSumAccel
-runningTotalSumAccel = 0.0
-global runningTotalSumLidar
-runningTotalSumLidar = 0.0
-
 #ACCEL MEASUREMENT-MODEL PROBABILITIES
 def measurementModelProbabilityHIGHaccel(value):
   if value < 5200000.0:
@@ -411,7 +420,7 @@ predictionOfAccelBeing60SuchThatPreviousAccelWas20psi
 predictionOfAccelBeing40SuchThatPreviousAccelWas40psi + \
 predictionOfAccelBeing40SuchThatPreviousAccelWas20psi
 
-print("In prediction... overall40PSIchancesAccel are"+str(overall40PSIchances)+"\n")
+ print("In prediction... overall40PSIchancesAccel are"+str(overall40PSIchances)+"\n")
 
 
  predictionOfAccelBeing20SuchThatPreviousAccelWas60psi = motion_model_20psi[60.0]  * predictionMap[60.0]
@@ -426,7 +435,7 @@ predictionOfAccelBeing20SuchThatPreviousAccelWas20psi
  print("In prediction... overall20PSIchancesAccel are"+str(overall20PSIchances)+"\n")
  #END OF PREDICTION FUNCTION
 
-def update(currentAccel) #,currentLidar):
+def update(currentAccel): #,currentLidar):
  #For each possible state do (measurement_model * prediction) / 
  # (sumOf measurement_model * prediction)
  # ...to create a pmf with each state having a probability
