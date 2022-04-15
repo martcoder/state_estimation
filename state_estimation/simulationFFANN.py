@@ -165,7 +165,6 @@ print("Update1 with arbitrary values is: "+str(update1))
 
 print("prediction1 is :"+str(prediction))
 
-
 #Current Accel, and Lidar data values
 currentAccel = 500.0;
 currentLidar = 500.0;
@@ -210,6 +209,7 @@ def relu(value):
 
 def accelProcessCurrentAccel(currentDataValue): 
   #Process input layer
+  global AccessmeasurementModel
   AccelmeasurementModel.inputLayer.output = currentDataValue * AccelmeasurementModel.inputLayer.weight
   AccelmeasurementModel.inputLayer.output += AccelmeasurementModel.inputLayer.bias
   AccelmeasurementModel.inputLayer.output = relu( AccelmeasurementModel.inputLayer.output )
@@ -228,7 +228,8 @@ def accelProcessCurrentAccel(currentDataValue):
 
   return AccelmeasurementModel.outputLayer.output
 
-def lidarProcessCurrentLidar(currentDataValue): 
+def lidarProcessCurrentLidar(currentDataValue):
+  global LidarmeasurementModel 
   #Process input layer
   LidarmeasurementModel.inputLayer.output = currentDataValue * LidarmeasurementModel.inputLayer.weight
   LidarmeasurementModel.inputLayer.output += LidarmeasurementModel.inputLayer.bias
@@ -248,6 +249,10 @@ def lidarProcessCurrentLidar(currentDataValue):
   return LidarmeasurementModel.outputLayer.output
 
 def prediction():
+ global motion_model_60psi
+ global motion_model_40psi
+ global motion_model_20psi
+ global predictionMap #Ensure the existing value can be accessed....
  predictionOfAccelBeing60SuchThatPreviousAccelWas60psi = motion_model_60psi[60.0]  * predictionMap[60.0]
  print("motion model is "+str(motion_model_60psi[60])+" and predictionMap[60] is "+str(predictionMap[60.0]))
 
@@ -435,6 +440,7 @@ def update(currentAccel,currentLidar):
  if denominatorLidar == 0:
    denominatorLidar = 0.000001
 
+ global predictionMap
  global justLidar
  global justAccel
  if justLidar:
@@ -457,19 +463,26 @@ def update(currentAccel,currentLidar):
 #currentAccel = next line of data
 #currentLidar = next line of data
 
-print("Please enter whether you want to operate with just Lidar? Y or N > ")
+print("Please enter whether you want to operate with just Lidar? Y or N > \n")
 useJustLidar = input()
 if(useJustLidar == "Y"):
   justLidar = True #
+  print("Okay, proceeding with predictions using only Lidar data!!!\n")
 else:
   justLidar = False
-  print("Please enter whether you want to operate with just Accel? Y or N > ")
+  print("Please enter whether you want to operate with just Accel? Y or N > \n")
   useJustAccel = input()
-  if(useJustAccel):
+  if(useJustAccel == "Y"):
     justAccel = True
+    print("Okay, proceeding with predictions using only Accelerometer data!!!\n")
   else:
     justAccel = False
+    print("Okay, proceeding with Sensor Fusion!!!!!\n")
+print("Please press the 'Any' key to continue")
+input() #Any key will do...
 
+
+#Now proceed with the simulation!!! 
 print("just about to open a data file")
 
 acceldataname = sys.argv[1]
