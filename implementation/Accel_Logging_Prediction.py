@@ -16,9 +16,9 @@ import random
 
 #folder creation from: https://gist.github.com/keithweaver/562d3caa8650eefe7f84fa074e9ca949
 #==========SETUP LOGGING===============
-errorFile = "/home/pi/state_estimation/data_collection/Accelerometer/errors.log"
+errorFile = "/home/pi/state_estimation/implementation/errors.log"
 folderName = str( datetime.now().time() )
-logfileRoot = "/home/pi/state_estimation/data_collection/Accelerometer/"+folderName+"/"
+logfileRoot = "/home/pi/state_estimation/implementation/"+folderName+"/"
 try: #make the logging folder, record error if it doesnt work. 
   if not os.path.exists(logfileRoot):
     os.makedirs(logfileRoot)
