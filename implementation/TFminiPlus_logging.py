@@ -9,9 +9,9 @@ import os, os.path
 import errno
 
 #==========SETUP LOGGING===============
-errorFile = "/home/pi/state_estimation/data_collection/LiDar/errors.log"
+errorFile = "/home/pi/state_estimation/implementation/Lidarerrors.log"
 folderName = str( datetime.now().time() )
-logfileRoot = "/home/pi/state_estimation/data_collection/LiDar/"+folderName+"/"
+logfileRoot = "/home/pi/state_estimation/impementation/Lidar"+folderName+"/"
 try: #make the logging folder, record error if it doesnt work. 
   if not os.path.exists(logfileRoot):
     os.makedirs(logfileRoot)
@@ -53,6 +53,13 @@ def writeDataToFile(filename):
     f.writelines( dataList )
     f.close #automatically flushes too
     return True
+
+#====WRITE LATEST LOGFILE NAME TO FLAG FILE=====
+def writeFlag(filename):
+   ff = open( "LidarFlag.flag","w" ) # overwrite each time
+   ff.write( filename ) # the filename of the log file will be written to the flag file
+   ff.close()
+   return True 
 
 
 
@@ -109,6 +116,7 @@ if __name__ == "__main__":
             complete = writeDataToFile(logfileConcatNames[lfnIndex] )
             if complete:
                 dataList[:] = [] #empty current values
+                writeFlag( logfileConcatNames[lfnIndex]  ) #make note of the latest log file name in the flag file
 
             # Set next log file to use in the circular logging
             if lfnIndex < (len(logfileConcatNames) - 1):

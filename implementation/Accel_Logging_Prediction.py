@@ -58,14 +58,14 @@ except OSError:
     errorF = open( errorFile,"a")
     errorF.write("Error creating logging folder at "+str(datetime.now().time())+'\n')
 logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data","log11.data","log12.data","log13.data","log14.data","log15.data","log16.data","log17.data","log18.data","log19.data","log20.data","log21.data","log22.data","log23.data","log24.data","log25.data","log26.data","log27.data","log28.data","log29.data","log30.data","log31.data","log32.data","log33.data","log34.data","log35.data","log36.data","log37.data","log38.data","log39.data","log40.data"] # circular log
-predictionFileNames = ["prdct1.data","prdct2.data","prdct3.data","prdct4.data","prdct5.data","prdct6.data","prdct7.data","prdct8.data","prdct9.data","prdct10.data","prdct11.data","prdct12.data","prdct13.data","prdct14.data","prdct15.data","prdct16.data","prdct17.data","prdct18.data","prdct19.data","prdct20.data","prdct21.data","prdct22.data","prdct23.data","prdct24.data","prdct25.data","prdct26.data","prdct27.data","prdct28.data","prdct29.data","prdct30.data","prdct31.data","prdct32.data","prdct33.data","prdct34.data","prdct35.data","prdct36.data","prdct37.data","prdct38.data","prdct39.data","prdct40.data"]
+predictionFileNames = ["aprdct1.data","aprdct2.data","aprdct3.data","aprdct4.data","aprdct5.data","aprdct6.data","aprdct7.data","aprdct8.data","aprdct9.data","aprdct10.data","aprdct11.data","aprdct12.data","aprdct13.data","aprdct14.data","aprdct15.data","aprdct16.data","aprdct17.data","aprdct18.data","aprdct19.data","aprdct20.data","aprdct21.data","aprdct22.data","aprdct23.data","aprdct24.data","aprdct25.data","aprdct26.data","aprdct27.data","aprdct28.data","aprdct29.data","aprdct30.data","aprdct31.data","aprdct32.data","aprdct33.data","aprdct34.data","aprdct35.data","aprdct36.data","aprdct37.data","aprdct38.data","aprdct39.data","aprdct40.data"]
 logfileConcatPredictions = []
 logfileConcatNames = []
 for i in range(len(logfileNames)):
   logfileConcatNames.append( logfileRoot+logfileNames[i] )
   logfileConcatPredictions.append( logfileRoot+predictionFileNames[i]  )
 lfnIndex = 0 # index for which log file we will write to next
-dataList = [] #for storing data values
+#dataList = [] #for storing data values
 predictionDataList = [] #for storing prediction data values
 MAX_VOLUME_OF_DATA_PER_FILE = 15 #quite fast like 2 logfiles per minute
 
@@ -82,8 +82,22 @@ def writePredictionToFile(filename):
     f.close() #automatically flushes too
     return True
 
+def writeFlagLidar():
+   ff = open( "LidarFlag.flag","w" ) # overwrite each time
+   ff.write( "zero" ) # empty the flag file
+   ff.close()
+   return True 
+
+def writeFlagAccel():
+   ff = open( "AccelFlag.flag","w" ) # overwrite each time
+   ff.write( "zero" ) # empty the flag file
+   ff.close()
+   return True 
+
+
+
 #======GET I2C  BUS==============
-bus = smbus.SMBus(1)
+#bus = smbus.SMBus(1)
 
 
 # ==========NOTES ON CONTROL REGISTER===============
@@ -553,64 +567,97 @@ if __name__ == "__main__":
         prevX = 0
         prevY = 0
         prevZ = 0
+
+        previousLogName = ""
+
         while True:
             #currentx,currenty,currentz = (500,500,500)
 
             # Loop until max volume of data has been gathered
-            while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
-               currentx,currenty,currentz = read_data() # read next sensor value
-               print("current accel x read data val is "+str(currentx))
-               #currentx = currentx+1
-               #currenty = currenty + 1
-               #currentz = currentz + 1
-               prediction()
-               currentAccel = currentx
-               update(currentAccel)
-               #print("Predictionmap is currently")
-               #print(predictionMap)
+            #while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
+            # Loop until next data log files have been written
+            time.sleep(1)
+            af = open( "AccelFlag.flag" )
+            Lin = af.readline() #Lin should contain name of log file if one has been written
+            if Lin == "zero"
+               continue  #back to start of loop, https://www.tutorialspoint.com/python/python_loop_control.htm
+            else: 
+               if Lin != previousLogName: #continue if we have a new log to process
+                  previousLogName = Lin
+                  #currentx,currenty,currentz = read_data() # read next sensor value
+                  print("current accel x read data val is "+str(currentx))
+                  #currentx = currentx+1
+                  #currenty = currenty + 1
+                  #currentz = currentz + 1
+                  #data has been written to file, so start processing it....
+                  AccelData = open(Lin) #Lin should contain name of log file if one has been written
+                  AccelLines = AccelData.readlines()
+                  AccelData.close() # close it so it can be accessed by the logging script...
+                  for al in AccelLines:
+                     currentx = al.split(',')[0]
 
-               #Now normalise the prediction map
-               normalisedMap = dict(predictionMap)
-               #Find the max value...
-               maxToFind = 0.0
-               for itm in predictionMap.items():
-                 if itm[1] > maxToFind:
-                   maxToFind = itm[1]
-               #ensure maxToFind is a value if zero
-               #if maxToFind == 0.0: 
-               # max = 0.000001
-               for kv in normalisedMap.items():
-                 normalisedMap[kv[0]] = kv[1]/maxToFind
-               predictionMap = dict(normalisedMap)
+                     prediction()
+                     currentAccel = currentx
+                     update(currentAccel)
+                  #print("Predictionmap is currently")
+                  #print(predictionMap)
 
-               #print("Predictionmap is currently")
-               #print(predictionMap)
+                  #Now normalise the prediction map
+                     normalisedMap = dict(predictionMap)
+                  #Find the max value...
+                     maxToFind = 0.0
+                     for itm in predictionMap.items():
+                       if itm[1] > maxToFind:
+                         maxToFind = itm[1]
+                  #ensure maxToFind is a value if zero
+                  #if maxToFind == 0.0: 
+                  # max = 0.000001
+                     for kv in normalisedMap.items():
+                       normalisedMap[kv[0]] = kv[1]/maxToFind
+                     predictionMap = dict(normalisedMap)
 
-               # Check values are populated, and check they are not same as previous value (even at rest they change a little)
-               if( (currentx != None or currenty != None or currentz != None) and ( (currentx != prevX) and (currenty != prevY) and (currentz != prevZ) )  ):
-                   prevX = currentx
-                   prevY = currenty
-                   prevZ = currentz
-                   print("current accel read value is "+str(currentx))
-                   dataList.append( str(currentx)+","+str(currenty)+","+str(currentz)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
-                   print("data read is x: "+str(currentx)+", y: "+str(currenty)+", z: "+str(currentz)+'\n'" and list length is "+str(len(dataList)))
+                  #print("Predictionmap is currently")
+                  #print(predictionMap)
 
-               predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+"\n"  )
-            #print("data collected is \n")
-            #print(dataList)
-            # Write data to current log file
-            complete = writeDataToFile( logfileConcatNames[lfnIndex] )
-            predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )
-            if complete: # once file is written
-                dataList[:] = [] #empty current values
-            if predictionsWritten: #once predictions have been written to file
-                predictionDataList[:] = [] #empty current values read for next log file entries
+                  # Check values are populated, and check they are not same as previous value (even at rest they change a little)
+                     '''if( (currentx != None or currenty != None or currentz != None) and ( (currentx != prevX) and (currenty != prevY) and (currentz != prevZ) )  ):
+                      prevX = currentx
+                      prevY = currenty
+                      prevZ = currentz
+                      print("current accel read value is "+str(currentx))
+                      dataList.append( str(currentx)+","+str(currenty)+","+str(currentz)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
+                      print("data read is x: "+str(currentx)+", y: "+str(currenty)+", z: "+str(currentz)+'\n'" and list length is "+str(len(dataList)))
+                     '''
+                     predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+"\n"  )
 
-            # Set next log file to use in the circular logging
-            if lfnIndex < (len(logfileConcatNames) - 1):
-                lfnIndex = lfnIndex + 1 # increment to next log file for writing to
-            else:
-                lfnIndex = 0  # if we reached the end of log files, circle round to start again
+                  predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )
+                  if predictionsWritten: #once predictions have been written to file
+                      predictionDataList[:] = [] #empty current values read for next log file entries
+                  # Set next log file to use in the circular logging
+                  if lfnIndex < (len(logfileConcatPredictions) - 1):
+                      lfnIndex = lfnIndex + 1 # increment to next log file for writing to
+                  else:
+                      lfnIndex = 0  # if we reached the end of log files, circle round to start again
+
+
+
+               else:
+                 continue #if no new log file, continue looping....
+               #print("data collected is \n")
+               #print(dataList)
+               # Write data to current log file
+               #complete = writeDataToFile( logfileConcatNames[lfnIndex] )
+               #predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )
+               #if complete: # once file is written
+               #    dataList[:] = [] #empty current values
+               #if predictionsWritten: #once predictions have been written to file
+               #    predictionDataList[:] = [] #empty current values read for next log file entries
+
+               # Set next log file to use in the circular logging
+               #if lfnIndex < (len(logfileConcatPredictions) - 1):
+               #    lfnIndex = lfnIndex + 1 # increment to next log file for writing to
+               #else:
+               #    lfnIndex = 0  # if we reached the end of log files, circle round to start again
 
     except KeyboardInterrupt(): # ctrl + c in terminal.
         if link != None:
