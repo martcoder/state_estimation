@@ -123,23 +123,30 @@ if __name__ == "__main__":
         prevX = 0
         prevY = 0
         prevZ = 0
+        #x,y,z = (1,1,1)  #FOR DEBUGGING
         while True:
             # Loop until max volume of data has been gathered
             while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
                x,y,z = read_data() # read next sensor value
+               #x = x + 1   #FOR DEBUGGING
+               #y = y + 1   #FOR DEBUGGING
+               #z = z + 1   #FOR DEBUGGING
                # Check values are populated, and check they are not same as previous value (even at rest they change a little)
                if( (x != None or y != None or z != None) and ( (x != prevX) and (y != prevY) and (z != prevZ) )  ):
                    prevX = x
                    prevY = y
                    prevZ = z
                    dataList.append( str(x)+","+str(y)+","+str(z)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
-                   print("data read is x: "+str(x)+", y: "+str(y)+", z: "+str(z)+'\n'" and list length is "+str(len(dataList)))
+                   #print("data read is x: "+str(x)+", y: "+str(y)+", z: "+str(z)+'\n'" and list length is "+str(len(dataList)))
 
             # Write data to current log file
             complete = writeDataToFile( logfileConcatNames[lfnIndex] )
             if complete: # once file is written
                 dataList[:] = [] #empty current values
+                #print("log file name (from index "+str(lfnIndex)+") to write is "+str(logfileConcatNames[lfnIndex]) )
                 writeFlag( logfileConcatNames[lfnIndex] ) # write lastest log file name to flag file... 
+
+
             # Set next log file to use in the circular logging
             if lfnIndex < (len(logfileConcatNames) - 1):
                 lfnIndex = lfnIndex + 1 # increment to next log file for writing to
@@ -149,5 +156,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt(): # ctrl + c in terminal.
         if link != None:
                 link.close()
-                print("program interrupted by the user")
+                #print("program interrupted by the user")
 

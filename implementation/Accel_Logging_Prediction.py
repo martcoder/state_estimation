@@ -50,7 +50,7 @@ runningTotalSumLidar = 0.0
 #==========SETUP LOGGING===============
 errorFile = "/home/pi/state_estimation/implementation/errors.log"
 folderName = str( datetime.now().time() )
-logfileRoot = "/home/pi/state_estimation/implementation/"+folderName+"/"
+logfileRoot = "/home/pi/state_estimation/implementation/prediction"+folderName+"/"
 try: #make the logging folder, record error if it doesnt work. 
   if not os.path.exists(logfileRoot):
     os.makedirs(logfileRoot)
@@ -67,7 +67,7 @@ for i in range(len(logfileNames)):
 lfnIndex = 0 # index for which log file we will write to next
 #dataList = [] #for storing data values
 predictionDataList = [] #for storing prediction data values
-MAX_VOLUME_OF_DATA_PER_FILE = 15 #quite fast like 2 logfiles per minute
+#MAX_VOLUME_OF_DATA_PER_FILE = 15 #quite fast like 2 logfiles per minute
 
 #======WRITE DATA TO CIRCULAR LOG FILES==============
 def writeDataToFile(filename):
@@ -564,10 +564,10 @@ if __name__ == "__main__":
     try:
         #initialise_configure_sensor()
         time.sleep(0.5)
-        prevX = 0
-        prevY = 0
-        prevZ = 0
-
+        prevX = 0.0
+        prevY = 0.0
+        prevZ = 0.0
+        currentx = 0.0
         previousLogName = ""
 
         while True:
@@ -579,7 +579,8 @@ if __name__ == "__main__":
             time.sleep(1)
             af = open( "AccelFlag.flag" )
             Lin = af.readline() #Lin should contain name of log file if one has been written
-            if Lin == "zero"
+            af.close() # Release the flag file so it can be written to be other scripts
+            if (Lin == "zero") or (Lin == ''):
                continue  #back to start of loop, https://www.tutorialspoint.com/python/python_loop_control.htm
             else: 
                if Lin != previousLogName: #continue if we have a new log to process
@@ -594,7 +595,7 @@ if __name__ == "__main__":
                   AccelLines = AccelData.readlines()
                   AccelData.close() # close it so it can be accessed by the logging script...
                   for al in AccelLines:
-                     currentx = al.split(',')[0]
+                     currentx = float(al.split(',')[0])
 
                      prediction()
                      currentAccel = currentx
@@ -616,9 +617,9 @@ if __name__ == "__main__":
                        normalisedMap[kv[0]] = kv[1]/maxToFind
                      predictionMap = dict(normalisedMap)
 
-                  #print("Predictionmap is currently")
-                  #print(predictionMap)
-
+                     #print("Predictionmap is currently")
+                     #print(predictionMap)
+                     #print("\n")
                   # Check values are populated, and check they are not same as previous value (even at rest they change a little)
                      '''if( (currentx != None or currenty != None or currentz != None) and ( (currentx != prevX) and (currenty != prevY) and (currentz != prevZ) )  ):
                       prevX = currentx
@@ -629,8 +630,13 @@ if __name__ == "__main__":
                       print("data read is x: "+str(currentx)+", y: "+str(currenty)+", z: "+str(currentz)+'\n'" and list length is "+str(len(dataList)))
                      '''
                      predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+"\n"  )
+                  predictionsWritten = False
+                  try:
+                    predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )
+                  except FileNotFoundError:
+                    errorF = open( errorFile,"a")
+                    errorF.write("Error reading logfile name from flag file at "+str(datetime.now().time())+'\n')
 
-                  predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )
                   if predictionsWritten: #once predictions have been written to file
                       predictionDataList[:] = [] #empty current values read for next log file entries
                   # Set next log file to use in the circular logging
