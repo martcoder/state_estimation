@@ -581,7 +581,7 @@ if __name__ == "__main__":
             #while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
             # Loop until next data log files have been written
             time.sleep(1)
-            writeLog("about to open flag file\n")
+            #writeLog("about to open flag file\n")
             af = 0
             try:
               af = open( "/home/pi/state_estimation/implementation/AccelFlag.flag" )
