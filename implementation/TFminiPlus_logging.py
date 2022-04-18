@@ -56,7 +56,7 @@ def writeDataToFile(filename):
 
 #====WRITE LATEST LOGFILE NAME TO FLAG FILE=====
 def writeFlag(filename):
-   ff = open( "LidarFlag.flag","w" ) # overwrite each time
+   ff = open( "home/pi/state_estimation/implementation/LidarFlag.flag","w" ) # overwrite each time
    ff.write( filename ) # the filename of the log file will be written to the flag file
    ff.close()
    return True 
