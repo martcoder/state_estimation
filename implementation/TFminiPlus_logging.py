@@ -11,7 +11,7 @@ import errno
 #==========SETUP LOGGING===============
 errorFile = "/home/pi/state_estimation/implementation/Lidarerrors.log"
 folderName = str( datetime.now().time() )
-logfileRoot = "/home/pi/state_estimation/impementation/Lidar"+folderName+"/"
+logfileRoot = "/home/pi/state_estimation/impementation/predictionL"+folderName+"/"
 try: #make the logging folder, record error if it doesnt work. 
   if not os.path.exists(logfileRoot):
     os.makedirs(logfileRoot)
@@ -19,7 +19,7 @@ except OSError:
     errorF = open( errorFile,"a")
     errorF.write("Error creating logging folder at "+str(datetime.now().time())+'\n')
 
-logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data","log11.data","log12.data","log13.data","log14.data","log15.data","log16.data","log17.data","log18.data","log19.data","log20.data","log21.data","log22.data","log23.data","log24.data","log25.data","log26.data","log27.data","log28.data","log29.data","log30.data","log31.data","log32.data","log33.data","log34.data","log35.data","log36.data","log37.data","log38.data","log39.data","log40.data"] # circular log
+logfileNames = ["Llog1.data","Llog2.data","Llog3.data","Llog4.data","Llog5.data","Llog6.data","Llog7.data","Llog8.data","Llog9.data","Llog10.data","Llog11.data","Llog12.data","Llog13.data","Llog14.data","Llog15.data","Llog16.data","Llog17.data","Llog18.data","Llog19.data","Llog20.data","Llog21.data","Llog22.data","Llog23.data","Llog24.data","Llog25.data","Llog26.data","Llog27.data","Llog28.data","Llog29.data","Llog30.data","Llog31.data","Llog32.data","Llog33.data","Llog34.data","Llog35.data","Llog36.data","Llog37.data","Llog38.data","Llog39.data","Llog40.data"] # circular log
 logfileConcatNames = [] # full names of logfiles
 for i in range(len(logfileNames)): #create list of full logfile names
   logfileConcatNames.append( logfileRoot+logfileNames[i] )
