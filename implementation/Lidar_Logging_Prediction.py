@@ -539,7 +539,8 @@ if __name__ == "__main__":
 
                   for al in SensorLines:
                      currentx = float(al.split(',')[0])
-
+                     if (currentx < 450.0 or currentx > 600.0):
+                        currentx = 500.0 #remove outliers
                      prediction()
                      currentLidar = currentx
                      update(currentLidar)
