@@ -11,7 +11,7 @@ import errno
 #==========SETUP LOGGING===============
 errorFile = "/home/pi/state_estimation/implementation/Lidarerrors.log"
 folderName = str( datetime.now().time() )
-logfileRoot = "/home/pi/state_estimation/implementation/L"+folderName+"/"
+logfileRoot = "/home/pi/state_estimation/implementation/Lidar"+folderName+"/"
 try: #make the logging folder, record error if it doesnt work. 
   if not os.path.exists(logfileRoot):
     os.makedirs(logfileRoot)
