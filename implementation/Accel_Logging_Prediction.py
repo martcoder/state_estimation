@@ -94,7 +94,11 @@ def writeFlagAccel():
    ff.close()
    return True 
 
-
+def writeLog(towrite):
+   flog = open(logfileRoot+"log.log")
+   flog.write(towrite)
+   flog.close()
+   return True
 
 #======GET I2C  BUS==============
 #bus = smbus.SMBus(1)
@@ -577,7 +581,15 @@ if __name__ == "__main__":
             #while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
             # Loop until next data log files have been written
             time.sleep(1)
-            af = open( "AccelFlag.flag" )
+            writeLog("about to open flag file\n")
+            af = 0
+            try:
+              af = open( "/home/pi/state_estimation/implementation/AccelFlag.flag" )
+            except FileNotFoundError:
+              errorF = open( errorFile,"a")
+              errorF.write("Error reading flag file, not found at "+str(datetime.now().time())+'\n')
+              continue #go to next cycle of the while loop
+
             Lin = af.readline() #Lin should contain name of log file if one has been written
             af.close() # Release the flag file so it can be written to be other scripts
             if (Lin == "zero") or (Lin == ''):
@@ -591,8 +603,8 @@ if __name__ == "__main__":
                   #currenty = currenty + 1
                   #currentz = currentz + 1
                   #data has been written to file, so start processing it....
-                  AccelData
-                  AccelLines
+                  AccelData = 0
+                  AccelLines = []
                   try:
                     AccelData = open(Lin) #Lin should contain name of log file if one has been written
                     AccelLines = AccelData.readlines()
