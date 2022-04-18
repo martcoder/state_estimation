@@ -573,7 +573,7 @@ if __name__ == "__main__":
                       dataList.append( str(currentx)+","+str(currenty)+","+str(currentz)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
                       print("data read is x: "+str(currentx)+", y: "+str(currenty)+", z: "+str(currentz)+'\n'" and list length is "+str(len(dataList)))
                      '''
-                     predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+", currentmodeloutput: "+str(currentModelValueAccel)+"\n"  )
+                     predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+", currentmodeloutput : "+str(currentModelValueAccel)+", currentmeanoutput : "+str(meanAccelFfannOutput)+"\n"  )
                   predictionsWritten = False
                   try:
                     predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )
