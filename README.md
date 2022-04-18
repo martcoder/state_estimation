@@ -17,12 +17,24 @@ Steps required:
 - data collection prototyping
   using currently a rPi to 
   receive and log data
-  (completed)
+  (COMPLETED)
 
 - data analysis to build models
-  (currently here)
+  (completed initially using
+  statistics such as variance,
+  but in practise was too 
+  difficult to differentiate
+  between different states. 
+  Instead trained artificial
+  neural network classifiers
+  for Accelerometer data and
+  Lidar data and used them 
+  as measurement models, now
+  COMPLETED)
 
 - run algorithm on data to test
+  (CURRENTLY HERE, ABOUT TO 
+   TEST ON REAL-WORLD TEST RUN)
 
 - tweaking of the algorithm 
   and data processing analysis
