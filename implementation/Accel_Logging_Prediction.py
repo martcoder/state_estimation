@@ -452,7 +452,7 @@ def update(currentAccel): #,currentLidar):
  denominatorsLidar = dict()
 
  denominatorsAccel[60.0] = overall60PSIchances * measurementModelProbabilityHIGHaccel( meanAccelFfannOutput  )
- denominatorsAccel[40.0] = overall40PSIchances * measurementModel=ProbabilityMEDaccel( meanAccelFfannOutput  )
+ denominatorsAccel[40.0] = overall40PSIchances * measurementModelProbabilityMEDaccel( meanAccelFfannOutput  )
  denominatorsAccel[20.0] = overall20PSIchances * measurementModelProbabilityLOWaccel( meanAccelFfannOutput  )
 
  #denominatorsLidar[60.0] = overall60PSIchances * measurementModelProbabilityHIGHlidar( meanLidarFfannOutput )
