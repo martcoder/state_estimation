@@ -44,7 +44,8 @@ runningTotalSumAccel = 0.0
 global runningTotalSumLidar
 runningTotalSumLidar = 0.0
 
-
+global currentModelValueAccel
+currentModelValueAccel = 0.0
 
 #folder creation from: https://gist.github.com/keithweaver/562d3caa8650eefe7f84fa074e9ca949
 #==========SETUP LOGGING===============
@@ -100,84 +101,6 @@ def writeLog(towrite):
    flog.close()
    return True
 
-#======GET I2C  BUS==============
-#bus = smbus.SMBus(1)
-
-
-# ==========NOTES ON CONTROL REGISTER===============
-# MMA8452Q address, 0x1C(28) ... can also be 1D as it was for me
-# Select Control register, 0x2A(42)
-#		0x00(00)	StandBy mode
-#bit 7           6            5       4     3     2              1         0
-#   ASLP_RATE1   ASLP_RATE0   DR2     DR1   DR0   LNOISE         F_READ    ACTIVE
-#my choices would be:
-#    12.5 Hz                  100 Hz              reduced noise  normal    active mode
-#    0           1            0       1      1    1              0         1   
-#therefore the control register byte will be 0 1 0 1 1 1 0 1 which is 0x5D
-
-
-#=====INITIALISE AND CONFIGURE SENSOR=========
-def initialise_configure_sensor():
-
- # -----ZERO THE CONTROL REGISTER FIRST-----
-
- # interesting, they're zeroing it first, also they had addr 0x1C 
- # but when  i run i2cdetect -y 1 i shows as 1D
-
- bus.write_byte_data(0x1D, 0x2A, 0x00) 
-
- # MMA8452Q address, 0x1C(28) ... can also be 1D as it was for me
- # Select Control register, 0x2A(42)
- #		0x01(01)	Active mode
-
-
- #-----NOW WRITE the CTRL_REG1-------
-
- bus.write_byte_data(0x1D, 0x2A, 0x5D) #it was 0x01 before, basically defaults. 
-
-
- #-----NOW WRITE the CONFIG REG------
- 
- # MMA8452Q address, 0x1C(28) ... can also be 1D as it was for me
- # Select Configuration register, 0x0E(14)
- #		0x00(00)	Set range to +/- 2g
- bus.write_byte_data(0x1D, 0x0E, 0x00)
-
-
-def read_data():
-
- # MMA8452Q address, 0x1C(28)
- # Read data back from 0x00(0), 7 bytes
- # Status register, X-Axis MSB, X-Axis LSB, Y-Axis MSB, Y-Axis LSB, Z-Axis MSB, Z-Axis LSB
- # changed 1C to 1D after reading datasheet and running i2cdetect -y 1
- try:
-   data = bus.read_i2c_block_data(0x1D, 0x00, 7) 
- except OSError:
-   errorF = open( errorFile,"a")
-   errorF.write("Error reading i2c data at "+str(datetime.now().time())+'\n')
-   errorF.close()
-
- # Convert the data
- xAccl = (data[1] * 256 + data[2]) / 16
- if xAccl > 2047 :
-  xAccl -= 4096
-
- yAccl = (data[3] * 256 + data[4]) / 16
- if yAccl > 2047 :
-  yAccl -= 4096
-
- zAccl = (data[5] * 256 + data[6]) / 16
- if zAccl > 2047 :
-  zAccl -= 4096
-
- return xAccl, yAccl, zAccl
-
-
- # Output data to screen
- #print("Acceleration in X-Axis : "+str(xAccl))
- #print("Acceleration in Y-Axis : " +str(yAccl))
- #print("Acceleration in Z-Axis : " +str(zAccl))
- #print("=========================\n")
 
 # NOW FOR MACHINE-LEARNING MODELS
 class Individual:
@@ -471,6 +394,7 @@ def update(currentAccel): #,currentLidar):
  #construct numerators
  numeratorsAccel = dict()
  #numeratorsLidar = dict()
+ global currentModelValueAccel
  currentModelValueAccel = accelProcessCurrentAccel(currentAccel)
  #currentModelValueLidar = lidarProcessCurrentLidar(currentLidar)
 
@@ -528,7 +452,7 @@ def update(currentAccel): #,currentLidar):
  denominatorsLidar = dict()
 
  denominatorsAccel[60.0] = overall60PSIchances * measurementModelProbabilityHIGHaccel( meanAccelFfannOutput  )
- denominatorsAccel[40.0] = overall40PSIchances * measurementModelProbabilityMEDaccel( meanAccelFfannOutput  )
+ denominatorsAccel[40.0] = overall40PSIchances * measurementModel=ProbabilityMEDaccel( meanAccelFfannOutput  )
  denominatorsAccel[20.0] = overall20PSIchances * measurementModelProbabilityLOWaccel( meanAccelFfannOutput  )
 
  #denominatorsLidar[60.0] = overall60PSIchances * measurementModelProbabilityHIGHlidar( meanLidarFfannOutput )
@@ -649,7 +573,7 @@ if __name__ == "__main__":
                       dataList.append( str(currentx)+","+str(currenty)+","+str(currentz)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
                       print("data read is x: "+str(currentx)+", y: "+str(currenty)+", z: "+str(currentz)+'\n'" and list length is "+str(len(dataList)))
                      '''
-                     predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+"\n"  )
+                     predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+", currentmodeloutput: "+str(currentModelValueAccel)+"\n"  )
                   predictionsWritten = False
                   try:
                     predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )
