@@ -591,9 +591,17 @@ if __name__ == "__main__":
                   #currenty = currenty + 1
                   #currentz = currentz + 1
                   #data has been written to file, so start processing it....
-                  AccelData = open(Lin) #Lin should contain name of log file if one has been written
-                  AccelLines = AccelData.readlines()
-                  AccelData.close() # close it so it can be accessed by the logging script...
+                  AccelData
+                  AccelLines
+                  try:
+                    AccelData = open(Lin) #Lin should contain name of log file if one has been written
+                    AccelLines = AccelData.readlines()
+                    AccelData.close() # close it so it can be accessed by the logging script...
+                  except FileNotFoundError:
+                    errorF = open( errorFile,"a")
+                    errorF.write("Error reading logfile name from flag file at "+str(datetime.now().time())+'\n')
+                    continue #go to next cycle of the while loop
+
                   for al in AccelLines:
                      currentx = float(al.split(',')[0])
 
