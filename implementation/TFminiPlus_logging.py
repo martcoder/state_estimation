@@ -11,7 +11,7 @@ import errno
 #==========SETUP LOGGING===============
 errorFile = "/home/pi/state_estimation/implementation/Lidarerrors.log"
 folderName = str( datetime.now().time() )
-logfileRoot = "/home/pi/state_estimation/impementation/predictionL"+folderName+"/"
+logfileRoot = "/home/pi/state_estimation/implementation/Lidar"+folderName+"/"
 try: #make the logging folder, record error if it doesnt work. 
   if not os.path.exists(logfileRoot):
     os.makedirs(logfileRoot)
@@ -56,7 +56,7 @@ def writeDataToFile(filename):
 
 #====WRITE LATEST LOGFILE NAME TO FLAG FILE=====
 def writeFlag(filename):
-   ff = open( "LidarFlag.flag","w" ) # overwrite each time
+   ff = open( "home/pi/state_estimation/implementation/LidarFlag.flag","w" ) # overwrite each time
    ff.write( filename ) # the filename of the log file will be written to the flag file
    ff.close()
    return True 
