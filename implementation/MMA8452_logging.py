@@ -36,7 +36,7 @@ def writeDataToFile(filename):
 
 #====WRITE FLAG FILE WITH LATEST LOGFILE NAME====
 def writeFlag(filename):
-   ff = open( "AccelFlag.flag","w" ) # overwrite each time
+   ff = open( "/home/pi/state_estimation/implementation/AccelFlag.flag","w" ) # overwrite each time
    ff.write( filename ) 
    ff.close()
    return True 

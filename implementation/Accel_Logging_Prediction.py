@@ -586,7 +586,7 @@ if __name__ == "__main__":
                if Lin != previousLogName: #continue if we have a new log to process
                   previousLogName = Lin
                   #currentx,currenty,currentz = read_data() # read next sensor value
-                  print("current accel x read data val is "+str(currentx))
+                  #print("current accel x read data val is "+str(currentx))
                   #currentx = currentx+1
                   #currenty = currenty + 1
                   #currentz = currentz + 1
