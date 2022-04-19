@@ -94,18 +94,19 @@ def read_data():
 
 if __name__ == "__main__":
     try:
-        #if link.isOpen() == False:
-        #    link.open()
-        #    link.flushInput()
-        #    link.flushOutput()
+        if link.isOpen() == False: #COMMENT OUT WHEN DEBUGGING
+            link.open()            #COMMENT OUT WHEN DEBUGGING
+            link.flushInput()      #COMMENT OUT WHEN DEBUGGING
+            link.flushOutput()     #COMMENT OUT WHEN DEBUGGING
         #Configure sensor to use mm rathqqer than cm
-        #writeConfig()
+        writeConfig() #COMMENT OUT WHEN DEBUGGING
         writeFlag("zero") # begin with zero in the flag file
         while True:
             # Loop until max volume of data has been gathered
             while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
                try:
-                 datavalue,strengthvalue = (100,2) #read_data() # read next sensor value 
+                 #datavalue,strengthvalue = (100,2) #FOR DEBUGGING
+                 datavalue,strengthvalue = read_data() # read next sensor value 
                  if((datavalue != None) and (strengthvalue != None)):
                      dataList.append( str(datavalue)+","+str(strengthvalue)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
                      #print("data value is "+str(datavalue)+" and list length is "+str(len(dataList)))
@@ -118,7 +119,7 @@ if __name__ == "__main__":
                 dataList[:] = [] #empty current values
                 writeFlag( logfileConcatNames[lfnIndex]  ) #make note of the latest log file name in the flag file
 
-            time.sleep(20) #FOR DEBUGGING ONLY
+            #time.sleep(20) #FOR DEBUGGING ONLY
             # Set next log file to use in the circular logging
             if lfnIndex < (len(logfileConcatNames) - 1):
                 lfnIndex = lfnIndex + 1 # increment to next log file for writing to

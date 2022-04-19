@@ -500,17 +500,18 @@ def update(currentAccel,currentLidar):
 
 if __name__ == "__main__":
     try:
-        #initialise_configure_sensor()
-        time.sleep(0.5)
+        initialise_configure_sensor() #COMMENT OUT WHEN DEBUGGING
+        #time.sleep(0.5) #FOR DEBUGGING ONLY
         prevX = 0.0
         prevY = 0.0
         prevZ = 0.0
         currentx = 0.0
+        currentl = 0.0
         previousLogNameA = ""
         previousLogNameL = ""
 
         while True:
-            #currentx,currenty,currentz = (500,500,500)
+            currentx,currenty,currentz = (500,500,500) #COMMENT OUT WHEN DEBUGGING
 
             # Loop until max volume of data has been gathered
             #while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
@@ -535,7 +536,7 @@ if __name__ == "__main__":
                continue  #back to start of loop, https://www.tutorialspoint.com/python/python_loop_control.htm
             else: 
                if (LinA != previousLogNameA) and (LinL != previousLogNameL): #continue if we have new logs to process
-                  print("new logs to process are "+LinA+" , "+LinL)
+                  #print("new logs to process are "+LinA+" , "+LinL)
                   previousLogName = LinA
                   previousLogName = LinL
                   #currentx,currenty,currentz = read_data() # read next sensor value
@@ -553,7 +554,7 @@ if __name__ == "__main__":
                     AccelData = open(LinA) #LinA should contain name of log file if one has been written
                     AccelLines = AccelData.readlines()
                     AccelData.close() # close it so it can be accessed by the logging script...
-                    
+
                   except FileNotFoundError:
                     errorF = open( errorFile,"a")
                     errorF.write("Error reading accel data file named "+str(LinA)+" at "+str(datetime.now().time())+'\n')
@@ -562,13 +563,11 @@ if __name__ == "__main__":
                     LidarData = open(LinL) #LinL should contain name of log file if one has been written
                     LidarLines = LidarData.readlines()
                     LidarData.close() # close it so it can be accessed by the logging script...
-                    
+
                   except FileNotFoundError:
                     errorF = open( errorFile,"a")
                     errorF.write("Error reading lidar data file at "+str(datetime.now().time())+'\n')
                     continue #go to next cycle of the while loop
-                   
- 
 
 
                   for ind in range(len(AccelLines)):
