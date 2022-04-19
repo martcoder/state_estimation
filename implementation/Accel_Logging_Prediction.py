@@ -312,6 +312,7 @@ def accelProcessCurrentAccel(currentDataValue):
     x.output = relu(x.output)
 
   #Process output layer
+  AccelmeasurementModel.outputLayer.output = 0.0
   for x in range(len(AccelmeasurementModel.hiddenLayer)):
     AccelmeasurementModel.outputLayer.output += AccelmeasurementModel.hiddenLayer[x].output * AccelmeasurementModel.outputLayer.weights[x]
   AccelmeasurementModel.outputLayer.output += AccelmeasurementModel.outputLayer.bias

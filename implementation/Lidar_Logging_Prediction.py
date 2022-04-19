@@ -335,6 +335,7 @@ def lidarProcessCurrentLidar(currentDataValue):
     x.output += x.bias
     x.output = relu(x.output)
   #Process output layer
+  LidarmeasurementModel.outputLayer.output = 0.0
   for x in range(len(LidarmeasurementModel.hiddenLayer)):
     LidarmeasurementModel.outputLayer.output += LidarmeasurementModel.hiddenLayer[x].output * LidarmeasurementModel.outputLayer.weights[x]
   LidarmeasurementModel.outputLayer.output += LidarmeasurementModel.outputLayer.bias
@@ -542,8 +543,8 @@ if __name__ == "__main__":
 
                   for al in SensorLines:
                      currentx = float(al.split(',')[0])
-                     if (currentx < 450.0 or currentx > 600.0):
-                        currentx = 500.0 #remove outliers
+                     if (currentx < 350.0 or currentx > 550.0):
+                        currentx = 450.0 #remove outliers
                      prediction()
                      currentLidar = currentx
                      update(currentLidar)
