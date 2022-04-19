@@ -500,7 +500,6 @@ def update(currentAccel,currentLidar):
 
 if __name__ == "__main__":
     try:
-        initialise_configure_sensor() #COMMENT OUT WHEN DEBUGGING
         #time.sleep(0.5) #FOR DEBUGGING ONLY
         prevX = 0.0
         prevY = 0.0
