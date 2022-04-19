@@ -33,12 +33,12 @@ Steps required:
   COMPLETED)
 
 - run algorithm on data to test
-  (CURRENTLY HERE, ABOUT TO 
-   TEST ON REAL-WORLD TEST RUN)
+  (now COMPLETED)
 
 - tweaking of the algorithm 
   and data processing analysis
   methods to achieve best result
+  (now COMPLETED)
 
 - implementation in more suitable
   hardware with realtime display

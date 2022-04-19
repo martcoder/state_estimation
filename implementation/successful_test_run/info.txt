@@ -1,0 +1,11 @@
+These runs started at 60psi, then consisted thereafter of: 
+
+50psi
+
+40spi
+
+30psi
+
+20psi
+
+15psi
