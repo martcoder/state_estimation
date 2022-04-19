@@ -244,27 +244,27 @@ predictionMap[60.0] = 0.333
 
 #ACCEL MEASUREMENT-MODEL PROBABILITIES
 def measurementModelProbabilityHIGHaccel(value):
-  if value < 5200000.0:
+  if value >= 190:
     return 0.05
-  if value > 5200000.0 and value < 5400000.0:
+  if (value >= 180) and (value < 190):
     return 0.25
-  if value > 5400000.0: 
+  if value < 180: 
     return 0.7
 
 def measurementModelProbabilityMEDaccel(value):
-  if value < 5200000.0:
+  if value >= 190:
     return 0.2
-  if value > 5200000 and value < 5400000.0:
+  if (value >= 180) and (value < 190):
     return 0.6
-  if value > 5400000: 
+  if value < 180: 
     return 0.2
 
 def measurementModelProbabilityLOWaccel(value):
-  if value < 5200000:
+  if value >= 190:
     return 0.7
-  if value > 5200000 and value < 5400000.0:
+  if (value >= 180) and (value < 190):
     return 0.25
-  if value > 5400000: 
+  if value < 180: 
     return 0.05
 
 '''

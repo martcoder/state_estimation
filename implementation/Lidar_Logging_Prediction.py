@@ -272,27 +272,27 @@ def measurementModelProbabilityLOWaccel(value):
 #LIDAR MEASUREMENT-MODEL PROBABILITIES
 #based on the best measurement model FFANN that was able to be evolved. 
 def measurementModelProbabilityHIGHlidar(value):
-  if value < 8000000.0:
+  if value < 2760.0:
     return 0.7
-  if value > 8000000 and value < 8250000.0:
+  if (value >= 2760) and (value < 2770.0):
     return 0.25
-  if value > 8250000.0: 
+  if value > 2770.0: 
     return 0.05
 
 def measurementModelProbabilityMEDlidar(value):
-  if value < 8000000.0:
+  if value < 2760.0:
     return 0.2
-  if value > 8000000.0 and value < 8250000.0:
+  if (value >= 2760.0) and (value < 2770.0):
     return 0.6
-  if value > 8250000.0: 
+  if value >= 2770: 
     return 0.2
 
 def measurementModelProbabilityLOWlidar(value):
-  if value < 8000000.0:
+  if value < 2760.0:
     return 0.05
-  if value > 8000000.0 and value < 8250000.0:
+  if (value >= 2760.0) and (value < 2770.0):
     return 0.25
-  if value > 8250000: 
+  if value >= 2770.0: 
     return 0.7
 
 
