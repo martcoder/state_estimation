@@ -56,7 +56,7 @@ def writeDataToFile(filename):
 
 #====WRITE LATEST LOGFILE NAME TO FLAG FILE=====
 def writeFlag(filename):
-   ff = open( "home/pi/state_estimation/implementation/LidarFlag.flag","w" ) # overwrite each time
+   ff = open( "/home/pi/state_estimation/implementation/LidarFlag.flag","w" ) # overwrite each time
    ff.write( filename ) # the filename of the log file will be written to the flag file
    ff.close()
    return True 
@@ -94,21 +94,21 @@ def read_data():
 
 if __name__ == "__main__":
     try:
-        if link.isOpen() == False:
-            link.open()
-            link.flushInput()
-            link.flushOutput()
+        #if link.isOpen() == False:
+        #    link.open()
+        #    link.flushInput()
+        #    link.flushOutput()
         #Configure sensor to use mm rathqqer than cm
-        writeConfig()
-
+        #writeConfig()
+        writeFlag("zero") # begin with zero in the flag file
         while True:
             # Loop until max volume of data has been gathered
             while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
                try:
-                 datavalue,strengthvalue = read_data() # read next sensor value 
+                 datavalue,strengthvalue = (100,2) #read_data() # read next sensor value 
                  if((datavalue != None) and (strengthvalue != None)):
                      dataList.append( str(datavalue)+","+str(strengthvalue)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
-                     print("data value is "+str(datavalue)+" and list length is "+str(len(dataList)))
+                     #print("data value is "+str(datavalue)+" and list length is "+str(len(dataList)))
                except TypeError:
                  pass # if data returned from read_data() is None this happens
 
@@ -118,6 +118,7 @@ if __name__ == "__main__":
                 dataList[:] = [] #empty current values
                 writeFlag( logfileConcatNames[lfnIndex]  ) #make note of the latest log file name in the flag file
 
+            time.sleep(20) #FOR DEBUGGING ONLY
             # Set next log file to use in the circular logging
             if lfnIndex < (len(logfileConcatNames) - 1):
                 lfnIndex = lfnIndex + 1 # increment to next log file for writing to

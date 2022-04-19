@@ -118,19 +118,20 @@ def read_data():
 
 if __name__ == "__main__":
     try:
-        initialise_configure_sensor()
+        #initialise_configure_sensor()
         time.sleep(0.5)
         prevX = 0
         prevY = 0
         prevZ = 0
-        #x,y,z = (1,1,1)  #FOR DEBUGGING
+        writeFlag("zero") # start with zero in the flag file
+        x,y,z = (1,1,1)  #FOR DEBUGGING
         while True:
             # Loop until max volume of data has been gathered
             while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
-               x,y,z = read_data() # read next sensor value
-               #x = x + 1   #FOR DEBUGGING
-               #y = y + 1   #FOR DEBUGGING
-               #z = z + 1   #FOR DEBUGGING
+               #x,y,z = read_data() # read next sensor value
+               x = x + 1   #FOR DEBUGGING
+               y = y + 1   #FOR DEBUGGING
+               z = z + 1   #FOR DEBUGGING
                # Check values are populated, and check they are not same as previous value (even at rest they change a little)
                if( (x != None or y != None or z != None) and ( (x != prevX) and (y != prevY) and (z != prevZ) )  ):
                    prevX = x
@@ -147,6 +148,7 @@ if __name__ == "__main__":
                 writeFlag( logfileConcatNames[lfnIndex] ) # write lastest log file name to flag file... 
 
 
+            time.sleep(20) #FOR DEBUGGING ONLY
             # Set next log file to use in the circular logging
             if lfnIndex < (len(logfileConcatNames) - 1):
                 lfnIndex = lfnIndex + 1 # increment to next log file for writing to

@@ -1,7 +1,5 @@
-# Code was kindly donated from:
-#  https://github.com/DcubeTechVentures/MMA8452Q/commit/cf1cb4562311f98abb1d376851d6fd6c767178a1
-# Changes and additions were added by myself and can be found here: 
-#  https://github.com/martcoder/state_estimation/tree/main/data_collection/Accelerometer
+# This code is licensed under the LGPL Lesser GNU Public License
+#  https://github.com/martcoder/state_estimation/
 
 #Accelerometer model is MMA8452
 
@@ -533,10 +531,11 @@ if __name__ == "__main__":
             af.close() # Release the flag file so it can be written to be other scripts
             LinL = lf.readline()
             lf.close()
-            if (LinA == "zero") or (LinA == '') or (LinL == 'zero') or (LinL == ''):
+            if (LinA == "zero") or (LinA == "") or (LinL == 'zero') or (LinL == ''):
                continue  #back to start of loop, https://www.tutorialspoint.com/python/python_loop_control.htm
             else: 
                if (LinA != previousLogNameA) and (LinL != previousLogNameL): #continue if we have new logs to process
+                  print("new logs to process are "+LinA+" , "+LinL)
                   previousLogName = LinA
                   previousLogName = LinL
                   #currentx,currenty,currentz = read_data() # read next sensor value
@@ -557,7 +556,7 @@ if __name__ == "__main__":
                     
                   except FileNotFoundError:
                     errorF = open( errorFile,"a")
-                    errorF.write("Error reading accel data file at "+str(datetime.now().time())+'\n')
+                    errorF.write("Error reading accel data file named "+str(LinA)+" at "+str(datetime.now().time())+'\n')
                     continue #go to next cycle of the while loop
                   try:
                     LidarData = open(LinL) #LinL should contain name of log file if one has been written
@@ -573,12 +572,22 @@ if __name__ == "__main__":
 
 
                   for ind in range(len(AccelLines)):
-                     currentx = float(AccelLines[ind].split(',')[0])
-                     currentl = float(LindarLines[ind].split(',')[0])
-
+                     print("index is "+str(ind)+" and length lidar data is "+str(len(LidarLines)))
+                     try:
+                       currentx = float(AccelLines[ind].split(',')[0])
+                     except IndexError:
+                       errorF = open( errorFile,"a")
+                       errorF.write("Index Error gone past accel data end at "+str(datetime.now().time())+'\n')
+                       pass
+                     try:
+                       currentl = float(LidarLines[ind].split(',')[0])
+                     except IndexError:
+                       errorF = open( errorFile,"a")
+                       errorF.write("Index Error gone past lidar data end at "+str(datetime.now().time())+'\n')
+                       pass
                      prediction() #First step of the algorithm is based on prior knowledge
-                     currentAccel = currentx
-                     currentLidar = currentl
+                     currentAccel = currentx #if index error occurred, previousl value will be used
+                     currentLidar = currentl #if index error occurred, previous value will be used
                      update(currentAccel,currentLidar) #2nd step of algorithm uses sensor data
                   #print("Predictionmap is currently")
                   #print(predictionMap)
@@ -609,7 +618,7 @@ if __name__ == "__main__":
                       dataList.append( str(currentx)+","+str(currenty)+","+str(currentz)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
                       print("data read is x: "+str(currentx)+", y: "+str(currenty)+", z: "+str(currentz)+'\n'" and list length is "+str(len(dataList)))
                      '''
-                     predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+", currentmodeloutputAccel : "+str(currentModelValueAccel)+", currentmodeloutputLidar : "+str(currentModelValueAccel)+", currentmeanoutputAccel : "+str(meanAccelFfannOutput)+", currentmeanoutputLidar : "+str(meanLidarFfannOutput)+"\n"  )
+                     predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+", currentmodeloutputAccel : "+str(currentModelValueAccel)+", currentmodeloutputLidar : "+str(currentModelValueLidar)+", currentmeanoutputAccel : "+str(meanAccelFfannOutput)+", currentmeanoutputLidar : "+str(meanLidarFfannOutput)+"\n"  )
                   predictionsWritten = False
                   try:
                     predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )
