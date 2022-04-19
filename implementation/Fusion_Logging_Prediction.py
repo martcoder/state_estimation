@@ -32,8 +32,16 @@ meanAccelFfannOutput = 0.0
 global meanLidarFfannOutput
 meanLidarFfannOutput = 0.0
 
-#global predictionMapAccel 
-#predictionMapAccel = dict()
+global predictionMapAccel 
+predictionMapAccel = dict()
+predictionMapAccel[60.0] = 0.0
+predictionMapAccel[40.0] = 0.0
+predictionMapAccel[20.0] = 0.0
+global predictionMapLidar
+predictionMapLidar = dict()
+predictionMapLidar[60.0] = 0.0
+predictionMapLidar[40.0] = 0.0
+predictionMapLidar[20.0] = 0.0
 
 global runningTotalCount
 runningTotalCount = 0.0
@@ -481,6 +489,8 @@ def update(currentAccel,currentLidar):
  #  denominatorLidar = 0.000001
 
  global predictionMap
+ global predictionMapAccel
+ global predictionMapLidar
  #global justLidar
  #global justAccel
  #if justLidar:
@@ -492,6 +502,16 @@ def update(currentAccel,currentLidar):
  #predictionMap[40.0] = (numeratorsAccel[40.0] / denominatorAccel)
  #predictionMap[60.0] = (numeratorsAccel[60.0] / denominatorAccel)
  #else: #Do sensor fusion!!!!!! 
+
+ predictionMapAccel[20.0] = (numeratorsAccel[20.0] / denominatorAccel)
+ predictionMapAccel[40.0] = (numeratorsAccel[40.0] / denominatorAccel)
+ predictionMapAccel[60.0] = (numeratorsAccel[60.0] / denominatorAccel)
+
+ predictionMapLidar[20.0] = (numeratorsLidar[20.0] / denominatorLidar)
+ predictionMapLidar[40.0] = (numeratorsLidar[40.0] / denominatorLidar)
+ predictionMapLidar[60.0] = (numeratorsLidar[60.0] / denominatorLidar)
+
+
  predictionMap[20.0] = (numeratorsAccel[20.0] / denominatorAccel) + (numeratorsLidar[20.0] / denominatorLidar)
  predictionMap[40.0] = (numeratorsAccel[40.0] / denominatorAccel) + (numeratorsLidar[40.0] / denominatorLidar)
  predictionMap[60.0] = (numeratorsAccel[60.0] / denominatorAccel) + (numeratorsLidar[60.0] / denominatorLidar)
@@ -616,7 +636,7 @@ if __name__ == "__main__":
                       dataList.append( str(currentx)+","+str(currenty)+","+str(currentz)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
                       print("data read is x: "+str(currentx)+", y: "+str(currenty)+", z: "+str(currentz)+'\n'" and list length is "+str(len(dataList)))
                      '''
-                     predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+", currentmodeloutputAccel : "+str(currentModelValueAccel)+", currentmodeloutputLidar : "+str(currentModelValueLidar)+", currentmeanoutputAccel : "+str(meanAccelFfannOutput)+", currentmeanoutputLidar : "+str(meanLidarFfannOutput)+"\n"  )
+                     predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+", Accel60 : "+str(predictionMapAccel[60.0])+", Accel40 : "+str(predictionMapAccel[40.0])+", Accel20 : "+str(predictionMapAccel[20.0])+", Lidar60 : "+str(predictionMapLidar[60.0])+", Lidar40 : "+str(predictionMapLidar[40.0])+", Lidar20 : "+str(predictionMapLidar[20.0])+", currentmodeloutputAccel : "+str(currentModelValueAccel)+", currentmodeloutputLidar : "+str(currentModelValueLidar)+", currentmeanoutputAccel : "+str(meanAccelFfannOutput)+", currentmeanoutputLidar : "+str(meanLidarFfannOutput)+"\n"  )
                   predictionsWritten = False
                   try:
                     predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )
