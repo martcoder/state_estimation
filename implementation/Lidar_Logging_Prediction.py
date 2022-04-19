@@ -83,18 +83,6 @@ def writePredictionToFile(filename):
     f.close() #automatically flushes too
     return True
 
-def writeFlagLidar():
-   ff = open( "LidarFlag.flag","w" ) # overwrite each time
-   ff.write( "zero" ) # empty the flag file
-   ff.close()
-   return True 
-
-def writeFlagAccel():
-   ff = open( "AccelFlag.flag","w" ) # overwrite each time
-   ff.write( "zero" ) # empty the flag file
-   ff.close()
-   return True 
-
 def writeLog(towrite):
    flog = open(logfileRoot+"log.log")
    flog.write(towrite)
