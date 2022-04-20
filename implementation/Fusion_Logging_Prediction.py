@@ -10,6 +10,7 @@ import errno
 import sys
 import copy
 import random
+import statistics
 
 #define some variables that get used in various functions
 global hiddenMax
@@ -37,6 +38,12 @@ meanAccel100 = 0.0
 
 global meanLidar100
 meanLidar100 = 0.0
+
+global previous100Accel
+previous100Accel = []
+
+global previous100Lidar
+previous100Lidar = []
 
 global medianAccelFfannOutput
 medianAccelFfannOutput = 0.0
@@ -66,12 +73,6 @@ global accelModelOutputList
 accelModelOutputList = []
 global lidarModelOutputList
 lidarModelOutputList = []
-
-global previous100Accel
-previous100Accel = []
-
-global previous100Lidar
-previous100Lidar = []
 
 
 global currentModelValueAccel
@@ -419,6 +420,9 @@ def update(currentAccel,currentLidar):
  global currentModelValueLidar
  currentModelValueLidar = lidarProcessCurrentLidar(currentLidar)
 
+ global previous100Accel
+ global previous100Lidar
+
  #Fill up previous100Accel
  if len(previous100Accel) < 100:
     previous100Accel.append(currentModelValueAccel)
@@ -639,13 +643,13 @@ if __name__ == "__main__":
                        currentx = float(AccelLines[ind].split(',')[0])
                      except IndexError:
                        errorF = open( errorFile,"a")
-                       errorF.write("Index Error gone past accel data end at "+str(datetime.now().time())+'\n')
+                       #errorF.write("Index Error gone past accel data end at "+str(datetime.now().time())+'\n')
                        pass
                      try:
                        currentl = float(LidarLines[ind].split(',')[0])
                      except IndexError:
                        errorF = open( errorFile,"a")
-                       errorF.write("Index Error gone past lidar data end at "+str(datetime.now().time())+'\n')
+                       #errorF.write("Index Error gone past lidar data end at "+str(datetime.now().time())+'\n')
                        pass
                      prediction() #First step of the algorithm is based on prior knowledge
                      currentAccel = currentx #if index error occurred, previousl value will be used
@@ -680,7 +684,7 @@ if __name__ == "__main__":
                       dataList.append( str(currentx)+","+str(currenty)+","+str(currentz)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
                       print("data read is x: "+str(currentx)+", y: "+str(currenty)+", z: "+str(currentz)+'\n'" and list length is "+str(len(dataList)))
                      '''
-                     predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+", Accel60 : "+str(predictionMapAccel[60.0])+", Accel40 : "+str(predictionMapAccel[40.0])+", Accel20 : "+str(predictionMapAccel[20.0])+", Lidar60 : "+str(predictionMapLidar[60.0])+", Lidar40 : "+str(predictionMapLidar[40.0])+", Lidar20 : "+str(predictionMapLidar[20.0])+", currentmodeloutputAccel : "+str(currentModelValueAccel)+", currentmodeloutputLidar : "+str(currentModelValueLidar)+", currentmeanoutputAccel : "+str(meanAccelFfannOutput)+", currentmeanoutputLidar : "+str(meanLidarFfannOutput)+"\n"  )
+                     predictionDataList.append( "60 : "+str(predictionMap[60.0])+", 40 : "+str(predictionMap[40.0])+", 20 : "+str(predictionMap[20.0])+", Accel60 : "+str(predictionMapAccel[60.0])+", Accel40 : "+str(predictionMapAccel[40.0])+", Accel20 : "+str(predictionMapAccel[20.0])+", Lidar60 : "+str(predictionMapLidar[60.0])+", Lidar40 : "+str(predictionMapLidar[40.0])+", Lidar20 : "+str(predictionMapLidar[20.0])+", currentmodeloutputAccel : "+str(currentModelValueAccel)+", currentmodeloutputLidar : "+str(currentModelValueLidar)+", currentmeanoutputAccel : "+str(meanAccelFfannOutput)+", currentmeanoutputLidar : "+str(meanLidarFfannOutput)+", meanAccel100 : "+str(meanAccel100)+", meanLidar100 : "+str(meanLidar100)+"\n"  )
                   predictionsWritten = False
                   try:
                     predictionsWritten = writePredictionToFile( logfileConcatPredictions[lfnIndex] )

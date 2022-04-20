@@ -25,7 +25,7 @@ for i in range(len(logfileNames)): #create list of full logfile names
   logfileConcatNames.append( logfileRoot+logfileNames[i] )
 lfnIndex = 0 # index for which log file we will write to next
 dataList = [] #for storing data values
-MAX_VOLUME_OF_DATA_PER_FILE = 2000 # quite fast like 2 logfiles per minute
+MAX_VOLUME_OF_DATA_PER_FILE = 2500 # quite fast like 2 logfiles per minute
 
 #=========SETUP SERIAL CONNECTION======
 link = serial.Serial(port='/dev/ttyAMA0', baudrate=115200, parity=serial.PARITY_NONE, stopbits=serial.STOPBITS_ONE, bytesize=serial.EIGHTBITS, timeout=1)
@@ -106,7 +106,7 @@ if __name__ == "__main__":
             while( len(dataList) < MAX_VOLUME_OF_DATA_PER_FILE ):
                try:
                  #datavalue,strengthvalue = (100,2) #FOR DEBUGGING
-                 datavalue,strengthvalue = read_data() # read next sensor value 
+                 datavalue,strengthvalue = read_data() # read next sensor value, COMMENT OUT WHEN DEBUGGING 
                  if((datavalue != None) and (strengthvalue != None)):
                      dataList.append( str(datavalue)+","+str(strengthvalue)+","+str(datetime.now().time())+'\n' ) # append to list of sensor values
                      #print("data value is "+str(datavalue)+" and list length is "+str(len(dataList)))
