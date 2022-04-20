@@ -32,6 +32,18 @@ meanAccelFfannOutput = 0.0
 global meanLidarFfannOutput
 meanLidarFfannOutput = 0.0
 
+global meanAccel100
+meanAccel100 = 0.0
+
+global meanLidar100
+meanLidar100 = 0.0
+
+global medianAccelFfannOutput
+medianAccelFfannOutput = 0.0
+global medianLidarFfannOutput
+medianAccelFfannOutput = 0.0
+
+
 global predictionMapAccel 
 predictionMapAccel = dict()
 predictionMapAccel[60.0] = 0.0
@@ -49,6 +61,18 @@ global runningTotalSumAccel
 runningTotalSumAccel = 0.0
 global runningTotalSumLidar
 runningTotalSumLidar = 0.0
+
+global accelModelOutputList
+accelModelOutputList = []
+global lidarModelOutputList
+lidarModelOutputList = []
+
+global previous100Accel
+previous100Accel = []
+
+global previous100Lidar
+previous100Lidar = []
+
 
 global currentModelValueAccel
 currentModelValueAccel = 0.0
@@ -395,6 +419,26 @@ def update(currentAccel,currentLidar):
  global currentModelValueLidar
  currentModelValueLidar = lidarProcessCurrentLidar(currentLidar)
 
+ #Fill up previous100Accel
+ if len(previous100Accel) < 100:
+    previous100Accel.append(currentModelValueAccel)
+ else: #Once full, remove earliest and append the latest to keep it size 100
+    previous100Accel = previous100Accel[1:100]
+    previous100Accel.append(currentModelValueAccel)
+
+ #Fill up previous100Lidar
+ if len(previous100Lidar) < 100:
+    previous100Lidar.append(currentModelValueLidar)
+ else: #Once full, remove earliest and append the latest to keep it size 100
+    previous100Lidar = previous100Lidar[1:100]
+    previous100Lidar.append(currentModelValueLidar)
+
+ global meanAccel100
+ meanAccel100 = statistics.mean( previous100Accel )
+
+ global meanLidar100
+ meanLidar100 = statistics.mean( previous100Lidar )
+
  #currentModelValueLidar = lidarProcessCurrentLidar(currentLidar)
 
  #print("Current model value accel is "+str(currentModelValueAccel)+"\n")
@@ -431,17 +475,17 @@ def update(currentAccel,currentLidar):
  global overall20PSIchances
 
  #print("measurement model prob high accel for meanAccelFfannOutput of "+str(meanAccelFfannOutput)+" is "+str(measurementModelProbabilityHIGHa>
- numeratorsAccel[60.0] = overall60PSIchances * measurementModelProbabilityHIGHaccel( meanAccelFfannOutput  )
+ numeratorsAccel[60.0] = overall60PSIchances * measurementModelProbabilityHIGHaccel( meanAccel100 ) # meanAccelFfannOutput  )
  #print("overall60PSIchances is "+str(overall60PSIchances)+"\n")
 
  #print("AccelmeasurementModel[60psi] for currentAccel value of "+str(currentAccel)+" is:")
  #print(AccelmeasurementModel['60psi'][currentAccel])
- numeratorsAccel[40.0] = overall40PSIchances * measurementModelProbabilityMEDaccel( meanAccelFfannOutput  )
- numeratorsAccel[20.0] = overall20PSIchances * measurementModelProbabilityLOWaccel( meanAccelFfannOutput  )
+ numeratorsAccel[40.0] = overall40PSIchances * measurementModelProbabilityMEDaccel( meanAccel100 ) # meanAccelFfannOutput  )
+ numeratorsAccel[20.0] = overall20PSIchances * measurementModelProbabilityLOWaccel( meanAccel100 ) #meanAccelFfannOutput  )
 
- numeratorsLidar[60.0] = overall60PSIchances * measurementModelProbabilityHIGHlidar( meanLidarFfannOutput )
- numeratorsLidar[40.0] = overall40PSIchances * measurementModelProbabilityMEDlidar( meanLidarFfannOutput )
- numeratorsLidar[20.0] = overall20PSIchances * measurementModelProbabilityLOWlidar( meanLidarFfannOutput )
+ numeratorsLidar[60.0] = overall60PSIchances * measurementModelProbabilityHIGHlidar( meanLidar100 ) #meanLidarFfannOutput )
+ numeratorsLidar[40.0] = overall40PSIchances * measurementModelProbabilityMEDlidar( meanLidar100 ) #meanLidarFfannOutput )
+ numeratorsLidar[20.0] = overall20PSIchances * measurementModelProbabilityLOWlidar( meanLidar100 ) #meanLidarFfannOutput )
 
  #print("overall40PSIchances is "+str(overall40PSIchances)+"\n")
  #print("overall20PSIchances is "+str(overall20PSIchances)+"\n")
@@ -460,13 +504,13 @@ def update(currentAccel,currentLidar):
  denominatorsAccel = dict()
  denominatorsLidar = dict()
 
- denominatorsAccel[60.0] = overall60PSIchances * measurementModelProbabilityHIGHaccel( meanAccelFfannOutput  )
- denominatorsAccel[40.0] = overall40PSIchances * measurementModelProbabilityMEDaccel( meanAccelFfannOutput  )
- denominatorsAccel[20.0] = overall20PSIchances * measurementModelProbabilityLOWaccel( meanAccelFfannOutput  )
+ denominatorsAccel[60.0] = overall60PSIchances * measurementModelProbabilityHIGHaccel( meanAccel100 ) #meanAccelFfannOutput  )
+ denominatorsAccel[40.0] = overall40PSIchances * measurementModelProbabilityMEDaccel( meanAccel100 ) #meanAccelFfannOutput  )
+ denominatorsAccel[20.0] = overall20PSIchances * measurementModelProbabilityLOWaccel( meanAccel100 ) #meanAccelFfannOutput  )
 
- denominatorsLidar[60.0] = overall60PSIchances * measurementModelProbabilityHIGHlidar( meanLidarFfannOutput )
- denominatorsLidar[40.0] = overall40PSIchances * measurementModelProbabilityMEDlidar( meanLidarFfannOutput )
- denominatorsLidar[20.0] = overall20PSIchances * measurementModelProbabilityLOWlidar( meanLidarFfannOutput )
+ denominatorsLidar[60.0] = overall60PSIchances * measurementModelProbabilityHIGHlidar( meanLidar100 ) #meanLidarFfannOutput )
+ denominatorsLidar[40.0] = overall40PSIchances * measurementModelProbabilityMEDlidar( meanLidar100 ) #meanLidarFfannOutput )
+ denominatorsLidar[20.0] = overall20PSIchances * measurementModelProbabilityLOWlidar( meanLidar100 ) #meanLidarFfannOutput )
 
  #denominatorsLidar[60.0] = overall60PSIchances * measurementModelProbabilityHIGHlidar( meanLidarFfannOutput )
  #denominatorsLidar[40.0] = overall40PSIchances * measurementModelProbabilityMEDlidar( meanLidarFfannOutput )
