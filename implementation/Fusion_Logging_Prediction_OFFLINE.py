@@ -3,7 +3,11 @@
 
 #Accelerometer model is MMA8452
 
-#Runas > python3 Fusion_Logging_Prediction_OFFLINE.py AccelDataFileName LidarDataFileName
+#To run.... create an AccelLogs folder and LidarLogs folder and put the accel and lidar log files in these respective folders...
+#then....
+#Runas > python3 Fusion_Logging_Prediction_OFFLINE.py
+#and it will look in those folders, calc predictions, and create a prediction folder to write predictions results to
+
 
 import time
 from datetime import datetime
@@ -633,7 +637,7 @@ if __name__ == "__main__":
                     #errorF = open( errorFile,"a")
                     print("Error reading accel data file named "+str(LinA)+" at "+str(datetime.now().time())+'\n')
                     #errorF.close()
-                    #continue #go to next cycle of the while loop
+                    continue #go to next cycle of the while loop
             try:
                     LidarData = open(LinL) #LinL should contain name of log file if one has been written
                     LidarLines = LidarData.readlines()
@@ -643,7 +647,7 @@ if __name__ == "__main__":
                     #errorF = open( errorFile,"a")
                     print("Error reading lidar data file at "+str(datetime.now().time())+'\n')
                     #errorF.close()
-                    #continue #go to next cycle of the while loop
+                    continue #go to next cycle of the while loop
 
 
             for ind in range(len(AccelLines)):
