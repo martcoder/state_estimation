@@ -19,6 +19,7 @@ try: #make the logging folder, record error if it doesnt work.
 except OSError:
     errorF = open( errorFile,"a")
     errorF.write("Error creating logging folder at "+str(datetime.now().time())+'\n')
+    errorF.close()
 logfileNames = ["log1.data","log2.data","log3.data","log4.data","log5.data","log6.data","log7.data","log8.data","log9.data","log10.data","log11.data","log12.data","log13.data","log14.data","log15.data","log16.data","log17.data","log18.data","log19.data","log20.data","log21.data","log22.data","log23.data","log24.data","log25.data","log26.data","log27.data","log28.data","log29.data","log30.data","log31.data","log32.data","log33.data","log34.data","log35.data","log36.data","log37.data","log38.data","log39.data","log40.data"] # circular log
 logfileConcatNames = []
 for i in range(len(logfileNames)):
@@ -145,8 +146,10 @@ if __name__ == "__main__":
             if complete: # once file is written
                 dataList[:] = [] #empty current values
                 #print("log file name (from index "+str(lfnIndex)+") to write is "+str(logfileConcatNames[lfnIndex]) )
-                writeFlag( logfileConcatNames[lfnIndex] ) # write lastest log file name to flag file... 
-
+                written = writeFlag( logfileConcatNames[lfnIndex] ) # write lastest log file name to flag file... 
+                errorF = open( errorFile,"a")
+                errorF.write("Just wrote "+str(logfileConcatNames[lfnIndex])+" with result "+str(written)+" to flag file at "+str(datetime.now().time())+'\n')
+                errorF.close()
 
             #time.sleep(20) #FOR DEBUGGING ONLY
             # Set next log file to use in the circular logging
