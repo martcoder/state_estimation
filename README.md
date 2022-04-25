@@ -38,8 +38,12 @@ Steps required:
 - tweaking of the algorithm 
   and data processing analysis
   methods to achieve best result
-  (now COMPLETED)
+  (now COMPLETED however results
+   were not definitive enough)
 
 - implementation in more suitable
   hardware with realtime display
   of state estimation
+  (would like to implement in 
+   MSP430 and/or FPGA but ran 
+   out of time to do this)
